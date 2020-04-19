@@ -1,0 +1,25 @@
+package com.ryanlindeborg.hourglass.hourglassspring.model;
+
+public enum Industry {
+
+    AEROSPACE,
+    AGRICTULRE,
+    CHEMICALS_AND_PHARMACEUTICALS,
+    SOFTWARE_AND_COMPUTERS,
+    CONSTRUCTION,
+    DEFENSE,
+    ENERGY,
+    ENTERTAINMENT,
+    FOOD,
+    HEALTHCARE,
+    HOSPITALITY,
+    INFORMATION,
+    INSURANCE,
+    MANUFACTURING,
+    MEDIA,
+    TELECOMMUNICATIONS,
+    FOOD_AND_BEVERAGE,
+    TRANSPORATION,
+    FINANCE
+
+}
