@@ -12,6 +12,7 @@ public class SchoolUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
+    private Long schoolId;
     private Date startDate;
     private Date endDate;
     private Degree degree;
@@ -35,6 +36,14 @@ public class SchoolUser {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Long schoolId) {
+        this.schoolId = schoolId;
     }
 
     public Date getStartDate() {

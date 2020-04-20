@@ -1,6 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
+import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
@@ -28,6 +29,7 @@ public class ProfileRestController {
         if (user == null) {
             return new ResponseEntity<HourglassRestException>(new HourglassRestException("User profile does not exist", HourglassRestErrorCode.RESOURCE_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
-        return null;
+
+        return new ResponseEntity<ProfileJson>(profileService.getProfileJsonByUserId(userId), HttpStatus.OK);
     }
 }
