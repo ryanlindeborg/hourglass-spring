@@ -1,8 +1,10 @@
 package com.ryanlindeborg.hourglass.hourglassspring.services;
 
+import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
 import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUser;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.http.HttpStatus;
@@ -40,10 +42,14 @@ public class ProfileService {
         ProfileJson profileJson = new ProfileJson();
 
         // Grab user
-        profileJson.setUser(userRepository.findById(userId).get());
+        User user = getUserById(userId);
+        if (user == null) {
+            throw new HourglassRestException("User profile does not exist", HourglassRestErrorCode.RESOURCE_NOT_FOUND);
+        }
+        profileJson.setUser(user);
 
         // Grab list of jobs associated with user
-        List<Job> jobs = jobRepository.getJobsByUserIdEquals(userId);
+        List<Job> jobs = jobRepository.getJobsByUserId(userId);
         profileJson.setJobs(jobs);
 
         // Grab list of school-user records associated with that user

@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
 
-    public List<Job> getJobsByUserIdEquals(Long userId);
+    public List<Job> getJobsByUserId(Long userId);
 }

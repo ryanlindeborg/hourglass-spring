@@ -22,14 +22,7 @@ public class ProfileRestController {
 
     // Returns JSON of complete profile that front-end can parse and render into profile
     @GetMapping("/user/{id}")
-    public ResponseEntity<> getProfileJsonByUserId(@PathVariable("id") Long userId) {
-        User user = profileService.getUserById(userId);
-
-        // Return standard exception with error code and message across whole project
-        if (user == null) {
-            return new ResponseEntity<HourglassRestException>(new HourglassRestException("User profile does not exist", HourglassRestErrorCode.RESOURCE_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<ProfileJson>(profileService.getProfileJsonByUserId(userId), HttpStatus.OK);
+    public ProfileJson getProfileJsonByUserId(@PathVariable("id") Long userId) {
+        return profileService.getProfileJsonByUserId(userId);
     }
 }

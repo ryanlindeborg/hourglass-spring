@@ -2,7 +2,7 @@ package com.ryanlindeborg.hourglass.hourglassspring.exception;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 
-public class HourglassRestException extends Exception {
+public class HourglassRestException extends RuntimeException {
     private HourglassRestErrorCode errorCode;
     private String message;
 
