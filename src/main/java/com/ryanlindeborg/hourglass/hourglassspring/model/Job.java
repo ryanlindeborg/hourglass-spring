@@ -8,6 +8,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    // TODO: Refactor this to be actual object reference instead of userId
     private Long userId;
     private String position;
     private Company company;
