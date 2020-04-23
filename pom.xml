@@ -16,6 +16,9 @@
 
 	<properties>
 		<java.version>14</java.version>
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>
+        <mockito.version>3.3.3</mockito.version>
+		<hamcrest.version>2.2</hamcrest.version>
 	</properties>
 
 	<dependencies>
@@ -57,6 +60,26 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Testing Tools -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
