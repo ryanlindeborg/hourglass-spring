@@ -7,6 +7,7 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.User;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,17 @@ public class ProfileService {
     private SchoolRepository schoolRepository;
     private SchoolUserRepository schoolUserRepository;
 
+    @Autowired
     public ProfileService(UserRepository userRepository, CompanyRepository companyRepository, JobRepository jobRepository, SchoolRepository schoolRepository, SchoolUserRepository schoolUserRepository) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.jobRepository = jobRepository;
         this.schoolRepository = schoolRepository;
         this.schoolUserRepository = schoolUserRepository;
+    }
+
+    public ProfileService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public User getUserById(Long userId) {
