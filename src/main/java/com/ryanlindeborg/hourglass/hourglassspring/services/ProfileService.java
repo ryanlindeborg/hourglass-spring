@@ -38,10 +38,7 @@ public class ProfileService {
 
     public User getUserById(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            return optionalUser.get();
-        }
-        return null;
+        return optionalUser.orElse(null);
     }
 
     public ProfileJson getProfileJsonByUserId(Long userId) {

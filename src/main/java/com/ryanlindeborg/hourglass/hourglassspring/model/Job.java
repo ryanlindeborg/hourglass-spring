@@ -1,18 +1,28 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
+@Entity
+@Table(name = "job")
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // TODO: Refactor this to be actual object reference instead of userId
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Column(name = "position")
     private String position;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
     private Company company;
+    @Enumerated(value = EnumType.STRING)
     private Industry industry;
+    @Column(name = "start_date")
+    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
 
     public Job() {
     }
@@ -25,12 +35,12 @@ public class Job {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPosition() {
@@ -55,5 +65,21 @@ public class Job {
 
     public void setIndustry(Industry industry) {
         this.industry = industry;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }
