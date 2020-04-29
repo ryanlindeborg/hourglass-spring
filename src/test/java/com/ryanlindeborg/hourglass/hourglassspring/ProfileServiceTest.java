@@ -43,7 +43,7 @@ public class ProfileServiceTest {
 
     @Test
     public void testGetProfileJsonByUserId() {
-        String profileJson = "";
+        String profileJson = "{\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"jobs\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"position\":\"Founder\",\"company\":{\"id\":null,\"name\":\"Mutiny\",\"industry\":\"SOFTWARE_AND_COMPUTERS\"},\"industry\":null,\"startDate\":\"1990-07-12T07:00:00.000+0000\",\"endDate\":\"1992-03-18T08:00:00.000+0000\"}],\"schoolUsers\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"school\":{\"id\":null,\"name\":\"MIT\"},\"startDate\":null,\"endDate\":\"1986-06-26T07:00:00.000+0000\",\"degree\":\"BA\",\"fieldOfStudy\":\"Computer Science\",\"completed\":true}]}";
 
         // Provide data for user
         User user = new User();
@@ -87,8 +87,7 @@ public class ProfileServiceTest {
 
         when(schoolUserRepository.getSchoolUsersByUserId(Mockito.anyLong())).thenReturn(Arrays.asList(schoolUser));
 
-        System.out.println("JSON: " + profileService.getProfileJsonByUserId(1L));
-//        assertEquals("", profileService.getProfileJsonByUserId(1L));
+        assertEquals(profileJson, profileService.getProfileJsonByUserId(1L));
     }
 
     @Test
@@ -100,6 +99,5 @@ public class ProfileServiceTest {
         assertThrows(HourglassRestException.class, () -> {
             profileService.getProfileJsonByUserId(1L);
         });
-
     }
 }

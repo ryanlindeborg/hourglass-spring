@@ -6,12 +6,14 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUser;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.SimilarUser;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,5 +62,27 @@ public class ProfileService {
         profileJson.setSchoolUsers(schoolUsers);
 
         return profileJson;
+    }
+
+    /**
+     *
+     * @param userId
+     * @return List of similar users that match user profile on at least one attribute
+     *
+     * {
+     * "similarUsers": [
+     *     {}
+     *   ]
+     *
+     * }
+     *
+     */
+    public List<SimilarUser> getSimilarUsers(Long userId) {
+        // Should return list of users that match on at least one attribute, and in that list, for each user, have list of attributes that are similar on, and what field in object that they match on
+        // SimilarAttribute object can be name of object and field similar on
+        List<SimilarUser> similarUsers = new ArrayList<>();
+
+
+        return null;
     }
 }
