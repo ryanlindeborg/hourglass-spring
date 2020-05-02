@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Class representing json that will be sent to client for similar user profile
  */
+// TODO: getSimilarUsers implies comparing against one user so don't have to specify a sourceUser
 public class SimilarUser {
     // User who you would like to find similar profiles for
     private User sourceUser;
@@ -14,6 +15,8 @@ public class SimilarUser {
     private User similarUser;
     private List<SimilarAttribute> similarAttributes;
 
+    // TODO: This could instead be a list of enum values - attributes
+    // Maintain list of attributes
     private class SimilarAttribute {
         // Object on which there is profile match
         private String similarObject;
