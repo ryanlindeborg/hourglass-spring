@@ -1,17 +1,8 @@
 package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
-import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
-import com.ryanlindeborg.hourglass.hourglassspring.model.*;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 @RestController
 @RequestMapping(path="/api/v1/profile", produces="application/json")
