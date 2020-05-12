@@ -67,13 +67,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Testing Tools -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>2.2.6.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- MySQL -->
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--			<version>8.0.20</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -86,6 +85,14 @@
 			<version>3.0.0-M4</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j</artifactId>
+			<version>1.3.8.RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -24,10 +24,9 @@ public class UserRestController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return optionalUser
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(consumes="application/json")
@@ -42,4 +41,7 @@ public class UserRestController {
         Pageable firstTenUsers = PageRequest.of(0, 10);
         return userRepository.findAll(firstTenUsers).getContent();
     }
+    // TODO: Front end technology will have lazy-loaded table you can use
+    // TODO: Could have getUsersByRange(int start, int end) method
+    // TODO: could also have getUsersBy[Object] - getUsersByIndustry
 }

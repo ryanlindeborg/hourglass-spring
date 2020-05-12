@@ -23,6 +23,8 @@ public class Job {
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
+    @Column(name = "is_dream_choice")
+    private Boolean isDreamChoice;
 
     public Job() {
     }
@@ -81,5 +83,13 @@ public class Job {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Boolean getDreamChoice() {
+        return isDreamChoice;
+    }
+
+    public void setDreamChoice(Boolean dreamChoice) {
+        isDreamChoice = dreamChoice;
     }
 }

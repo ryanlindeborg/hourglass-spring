@@ -91,6 +91,8 @@ public class ProfileServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
+            // TODO: Have to implement jobs, user, and school users equals and hash code methods
+            // TODO: Could use @Equals and @Hashcode with Lombok to do this
             assertEquals(objectMapper.readValue(profileJsonString, ProfileJson.class), profileService.getProfileJsonByUserId(1L));
         } catch (Exception e) {
             fail("Couldn't parse test profile json string properly");
