@@ -67,7 +67,7 @@ public class HourglassSpringApplication {
 		schoolUser.setFieldOfStudy("Computer Science");
 		Calendar endDateSchool = new GregorianCalendar(1986, 5, 26);
 		schoolUser.setEndDate(endDateSchool.getTime());
-		schoolUser.setCompleted(Boolean.TRUE);
+		schoolUser.setIsCompleted(Boolean.TRUE);
 
 		return () -> {
 			userRepository.save(user);
