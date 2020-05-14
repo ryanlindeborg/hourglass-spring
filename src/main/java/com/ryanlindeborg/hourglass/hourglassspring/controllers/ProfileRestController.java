@@ -1,7 +1,11 @@
 package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,5 +22,17 @@ public class ProfileRestController {
     @GetMapping("/user/{id}")
     public ProfileJson getProfileJsonByUserId(@PathVariable("id") Long userId) {
         return profileService.getProfileJsonByUserId(userId);
+    }
+
+    // Parse profile information from biography form and create objects
+    @PostMapping("/user")
+    public ResponseEntity<?> saveProfile(@RequestBody String profileDetailsJson) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(profileDetailsJson);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
