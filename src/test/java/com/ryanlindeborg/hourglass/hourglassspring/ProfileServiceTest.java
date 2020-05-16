@@ -47,6 +47,7 @@ public class ProfileServiceTest {
         String profileJsonString = "{\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"jobs\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"position\":\"Founder\",\"company\":{\"id\":null,\"name\":\"Mutiny\",\"industry\":\"SOFTWARE_AND_COMPUTERS\"},\"industry\":null,\"startDate\":\"1990-07-12T07:00:00.000+0000\",\"endDate\":\"1992-03-18T08:00:00.000+0000\"}],\"schoolUsers\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"school\":{\"id\":null,\"name\":\"MIT\"},\"startDate\":null,\"endDate\":\"1986-06-26T07:00:00.000+0000\",\"degree\":\"BA\",\"fieldOfStudy\":\"Computer Science\",\"isCompleted\":true}]}";
 //        String profileJsonString = "{\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"Fri Apr 02 00:00:00 PST 1965\",\"userType\":\"DEFAULT\"},\"jobs\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"position\":\"Founder\",\"company\":{\"id\":null,\"name\":\"Mutiny\",\"industry\":\"SOFTWARE_AND_COMPUTERS\"},\"industry\":null,\"startDate\":\"1990-07-12T07:00:00.000+0000\",\"endDate\":\"1992-03-18T08:00:00.000+0000\"}],\"schoolUsers\":[{\"id\":null,\"user\":{\"id\":null,\"firstName\":\"Cameron\",\"middleName\":null,\"lastName\":\"Howe\",\"birthDate\":\"1965-04-02T08:00:00.000+0000\",\"userType\":\"DEFAULT\"},\"school\":{\"id\":null,\"name\":\"MIT\"},\"startDate\":null,\"endDate\":\"1986-06-26T07:00:00.000+0000\",\"degree\":\"BA\",\"fieldOfStudy\":\"Computer Science\",\"isCompleted\":true}]}";
 
+        //TODO: Implement builder pattern for these objects
         // Provide data for user
         User user = new User();
         user.setFirstName("Cameron");
@@ -91,8 +92,6 @@ public class ProfileServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            // TODO: Have to implement jobs, user, and school users equals and hash code methods
-            // TODO: Could use @Equals and @Hashcode with Lombok to do this
             assertEquals(objectMapper.readValue(profileJsonString, ProfileJson.class), profileService.getProfileJsonByUserId(1L));
         } catch (Exception e) {
             fail("Couldn't parse test profile json string properly");

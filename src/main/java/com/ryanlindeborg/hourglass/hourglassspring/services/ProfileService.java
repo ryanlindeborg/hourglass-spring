@@ -1,5 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
 import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUser;
@@ -62,6 +64,40 @@ public class ProfileService {
         profileJson.setSchoolUsers(schoolUsers);
 
         return profileJson;
+    }
+
+    /**
+     *
+     * @param profileDetailsJson
+     * @return profileDetailsJson that was passed into method back to front end so can edit if hit validation error
+     */
+    public String saveProfileFromJson(String profileDetailsJson) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(profileDetailsJson);
+            System.out.println("Json node: " + jsonNode);
+
+            User user =  objectMapper.treeToValue(jsonNode.get("user"), User.class);
+            Job job = objectMapper.treeToValue(jsonNode.get("job"), Job.class);
+            job.setUser(user);
+            jobRepository.save(job);
+            Job firstPostCollegeJob = objectMapper.treeToValue(jsonNode.get("firstPostCollegeJob"), Job.class);
+            firstPostCollegeJob.setUser(user);
+            jobRepository.save(firstPostCollegeJob);
+            Job dreamJob = objectMapper.treeToValue(jsonNode.get("dreamJob"), Job.class);
+            dreamJob.setUser(user);
+            jobRepository.save(dreamJob);
+            SchoolUser collegeSchoolUser = objectMapper.treeToValue(jsonNode.get("collegeSchoolUser"), SchoolUser.class);
+            collegeSchoolUser.setUser(user);
+            schoolUserRepository.save(collegeSchoolUser);
+            SchoolUser postGradSchoolUser = objectMapper.treeToValue(jsonNode.get("postGradSchoolUser"), SchoolUser.class);
+            postGradSchoolUser.setUser(user);
+            schoolUserRepository.save(postGradSchoolUser);
+
+            return profileDetailsJson;
+        } catch (Exception e) {
+            throw new HourglassRestException(e.getMessage(), HourglassRestErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

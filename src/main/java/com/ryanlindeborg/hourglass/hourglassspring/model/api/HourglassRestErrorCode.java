@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum HourglassRestErrorCode {
-    RESOURCE_NOT_FOUND(1);
+    RESOURCE_NOT_FOUND(1),
+    INTERNAL_SERVER_ERROR(2);
 
     private Integer errorCode;
     private static final Map<Integer, HourglassRestErrorCode> errorCodeMap = new HashMap<>();

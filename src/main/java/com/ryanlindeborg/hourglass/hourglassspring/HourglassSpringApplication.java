@@ -32,6 +32,7 @@ public class HourglassSpringApplication {
 	@Bean
 	// Start-up data for h2 database for development
 	InitializingBean setUpDB() {
+		//TODO: Implement builder pattern for these objects
 		// Create user
 		User user = new User();
 		user.setFirstName("Cameron");
