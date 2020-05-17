@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/v1/company", produces="application/json")
-@CrossOrigin(origins="*")
 public class CompanyRestController {
     private CompanyRepository companyRepository;
 

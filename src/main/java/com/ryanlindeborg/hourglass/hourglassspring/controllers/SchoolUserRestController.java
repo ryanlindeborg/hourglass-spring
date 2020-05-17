@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/v1/schoolUser", produces="application/json")
-@CrossOrigin(origins="*")
 public class SchoolUserRestController {
     @GetMapping("/degrees")
     public List<String> getDegreeNames() {

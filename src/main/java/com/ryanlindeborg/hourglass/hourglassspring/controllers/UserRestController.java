@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/api/v1/user", produces="application/json")
-@CrossOrigin(origins="*")
 public class UserRestController {
     private UserRepository userRepository;
 
