@@ -3,10 +3,9 @@ package com.ryanlindeborg.hourglass.hourglassspring.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
-import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
-import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUser;
-import com.ryanlindeborg.hourglass.hourglassspring.model.User;
+import com.ryanlindeborg.hourglass.hourglassspring.model.*;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.SimilarUser;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,33 +68,168 @@ public class ProfileService {
 
     /**
      *
-     * @param profileDetailsJson
-     * @return profileDetailsJson that was passed into method back to front end so can edit if hit validation error
+     * @param profileDetails
+     * @return profileDetails that was passed into method back to front end so can edit if hit validation error
      */
-    public String saveProfileFromJson(String profileDetailsJson) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    @Transactional
+    public ProfileDetails saveProfileFromJson(ProfileDetails profileDetails) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(profileDetailsJson);
-            System.out.println("Json node: " + jsonNode);
+            //--------- Process user ---------//
+            User user = profileDetails.getUser();
+            User existingUser = null;
+            // Check if user already exists
+            if (user.getId() != null) {
+                // Update existing user
+                existingUser = userRepository.findById(user.getId()).orElse(null);
+                existingUser.setFirstName(user.getFirstName());
+                existingUser.setLastName(user.getLastName());
+                existingUser.setBirthDate(user.getBirthDate());
+                user = existingUser;
+            } else {
+                // Save user as default user
+                user.setUserType(UserType.DEFAULT);
+            }
+            userRepository.save(user);
 
-            User user =  objectMapper.treeToValue(jsonNode.get("user"), User.class);
-            Job job = objectMapper.treeToValue(jsonNode.get("job"), Job.class);
-            job.setUser(user);
-            jobRepository.save(job);
-            Job firstPostCollegeJob = objectMapper.treeToValue(jsonNode.get("firstPostCollegeJob"), Job.class);
-            firstPostCollegeJob.setUser(user);
+            //--------- Process currentJob ---------//
+            Job currentJob = profileDetails.getCurrentJob();
+            Job existingCurrentJob = null;
+            Company currentJobCompany = profileDetails.getCurrentJob().getCompany();
+
+            // See if current job company is existing
+            if (currentJobCompany.getId() != null) {
+                currentJobCompany = companyRepository.findById(currentJobCompany.getId()).orElse(null);
+            } else {
+                // If company id was not already set, search for company existence
+                String currentJobCompanyName = currentJob.getCompany().getName();
+                Company existingCurrentJobCompany = companyRepository.getCompanyByName(currentJobCompanyName);
+                if (existingCurrentJobCompany != null) {
+                    currentJobCompany = existingCurrentJobCompany;
+                } else {
+                    // If company is not existing in database, save it as new company
+                    currentJobCompany = currentJob.getCompany();
+                    currentJobCompany = companyRepository.save(currentJobCompany);
+                }
+            }
+
+            // Check if current job already exists
+            if (currentJob.getId() != null) {
+                // Update existing current job
+                existingCurrentJob = jobRepository.findById(currentJob.getId()).orElse(null);
+                existingCurrentJob.setPosition(currentJob.getPosition());
+                existingCurrentJob.setIndustry(currentJob.getIndustry());
+                existingCurrentJob.setCompany(currentJobCompany);
+                currentJob = existingCurrentJob;
+            } else {
+                // Create new job of correct job type
+                currentJob.setCompany(currentJobCompany);
+                currentJob.setJobType(JobType.CURRENT_JOB);
+                currentJob.setUser(user);
+                currentJob.setCompany(currentJobCompany);
+            }
+            jobRepository.save(currentJob);
+
+            //--------- Process firstPostCollegeJob ---------//
+            Job firstPostCollegeJob = profileDetails.getFirstPostCollegeJob();
+            Job existingFirstPostCollegeJob = null;
+            Company firstPostCollegeJobCompany = profileDetails.getFirstPostCollegeJob().getCompany();
+
+            // See if first post-college job company is existing
+            if (firstPostCollegeJobCompany.getId() != null) {
+                firstPostCollegeJobCompany = companyRepository.findById(firstPostCollegeJobCompany.getId()).orElse(null);
+            } else {
+                // If company id was not already set, search for company existence
+                String firstPostCollegeJobCompanyName = firstPostCollegeJob.getCompany().getName();
+                Company existingFirstPostCollegeJobCompany = companyRepository.getCompanyByName(firstPostCollegeJobCompanyName);
+                if (existingFirstPostCollegeJobCompany != null) {
+                    firstPostCollegeJobCompany = existingFirstPostCollegeJobCompany;
+                } else {
+                    // If company is not existing in database, save it as new company
+                    firstPostCollegeJobCompany = firstPostCollegeJob.getCompany();
+                    firstPostCollegeJobCompany = companyRepository.save(firstPostCollegeJobCompany);
+                }
+            }
+
+            // Check if first post-college job already exists
+            if (firstPostCollegeJob.getId() != null) {
+                // Update existing first post-college job
+                existingFirstPostCollegeJob = jobRepository.findById(firstPostCollegeJob.getId()).orElse(null);
+                existingFirstPostCollegeJob.setPosition(firstPostCollegeJob.getPosition());
+                existingFirstPostCollegeJob.setIndustry(firstPostCollegeJob.getIndustry());
+                existingFirstPostCollegeJob.setCompany(firstPostCollegeJobCompany);
+                firstPostCollegeJob = existingFirstPostCollegeJob;
+            } else {
+                // Create new job of correct job type
+                firstPostCollegeJob.setCompany(firstPostCollegeJobCompany);
+                firstPostCollegeJob.setJobType(JobType.FIRST_POST_COLLEGE_JOB);
+                firstPostCollegeJob.setUser(user);
+                firstPostCollegeJob.setCompany(firstPostCollegeJobCompany);
+            }
             jobRepository.save(firstPostCollegeJob);
-            Job dreamJob = objectMapper.treeToValue(jsonNode.get("dreamJob"), Job.class);
-            dreamJob.setUser(user);
-            jobRepository.save(dreamJob);
-            SchoolUser collegeSchoolUser = objectMapper.treeToValue(jsonNode.get("collegeSchoolUser"), SchoolUser.class);
-            collegeSchoolUser.setUser(user);
-            schoolUserRepository.save(collegeSchoolUser);
-            SchoolUser postGradSchoolUser = objectMapper.treeToValue(jsonNode.get("postGradSchoolUser"), SchoolUser.class);
-            postGradSchoolUser.setUser(user);
-            schoolUserRepository.save(postGradSchoolUser);
 
-            return profileDetailsJson;
+            //--------- Process dreamJob ---------//
+            Job dreamJob = profileDetails.getDreamJob();
+            Job existingDreamJob = null;
+            Company dreamJobCompany = profileDetails.getDreamJob().getCompany();
+
+            // See if dream job company is existing
+            if (dreamJobCompany.getId() != null) {
+                dreamJobCompany = companyRepository.findById(dreamJobCompany.getId()).orElse(null);
+            } else {
+                // If company id was not already set, search for company existence
+                String dreamJobCompanyName = dreamJob.getCompany().getName();
+                Company existingDreamJobCompany = companyRepository.getCompanyByName(dreamJobCompanyName);
+                if (existingDreamJobCompany != null) {
+                    dreamJobCompany = existingDreamJobCompany;
+                } else {
+                    // If company is not existing in database, save it as new company
+                    dreamJobCompany = dreamJob.getCompany();
+                    dreamJobCompany = companyRepository.save(dreamJobCompany);
+                }
+            }
+
+            // Check if dream job already exists
+            if (dreamJob.getId() != null) {
+                // Update existing dream job
+                existingDreamJob = jobRepository.findById(dreamJob.getId()).orElse(null);
+                existingDreamJob.setPosition(dreamJob.getPosition());
+                existingDreamJob.setIndustry(dreamJob.getIndustry());
+                existingDreamJob.setCompany(dreamJobCompany);
+                dreamJob = existingDreamJob;
+            } else {
+                // Create new job of correct job type
+                dreamJob.setCompany(dreamJobCompany);
+                dreamJob.setJobType(JobType.DREAM_JOB);
+                dreamJob.setUser(user);
+                dreamJob.setCompany(dreamJobCompany);
+                jobRepository.save(dreamJob);
+            }
+
+            //--------- Process collegeSchoolUser ---------//
+            //TODO: Create logic to process collegeSchoolUser
+            // school, end date, field of study
+            SchoolUser collegeSchoolUser = profileDetails.getCollegeSchoolUser();
+            School college = profileDetails.getCollegeSchoolUser().getSchool();
+
+            // See if school is existing
+            if (college.getId() != null) {
+                college = schoolRepository.findById(college.getId()).orElse(null);
+            } else {
+                // If school not already saved,
+            }
+
+
+            // See if college school user is existing
+            if (collegeSchoolUser.getId() != null) {
+                collegeSchoolUser = schoolUserRepository.findById(collegeSchoolUser.getId()).orElse(null);
+            } else {
+
+            }
+
+            //--------- Process postGradSchoolUser ---------//
+            // school, end date, degree, field of study
+
+            return profileDetails;
         } catch (Exception e) {
             throw new HourglassRestException(e.getMessage(), HourglassRestErrorCode.INTERNAL_SERVER_ERROR);
         }

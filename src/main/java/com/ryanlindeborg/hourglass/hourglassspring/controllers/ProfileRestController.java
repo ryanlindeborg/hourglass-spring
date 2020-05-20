@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,9 @@ public class ProfileRestController {
     }
 
     // Parse profile information from biography form and create objects
+    // TODO: could include 200 (or 204, or 201 - created) - which can include response body
     @PostMapping("/user")
-    public String saveProfile(@RequestBody String profileDetailsJson) {
-        return profileService.saveProfileFromJson(profileDetailsJson);
+    public ProfileDetails saveProfile(@RequestBody ProfileDetails profileDetails) {
+        return profileService.saveProfileFromJson(profileDetails);
     }
 }

@@ -27,6 +27,6 @@ public class Job {
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
-    @Column(name = "is_dream_choice")
-    private Boolean isDreamChoice;
+    @Enumerated(value = EnumType.STRING)
+    private JobType jobType;
 }

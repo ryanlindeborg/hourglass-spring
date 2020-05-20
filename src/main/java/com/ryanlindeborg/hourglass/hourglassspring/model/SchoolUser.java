@@ -29,4 +29,6 @@ public class SchoolUser {
     private String fieldOfStudy;
     @Column(name = "is_completed")
     private Boolean isCompleted;
+    @Enumerated(value = EnumType.STRING)
+    private SchoolUserType schoolUserType;
 }
