@@ -101,13 +101,12 @@ public class ProfileService {
                 currentJobCompany = companyRepository.findById(currentJobCompany.getId()).orElse(null);
             } else {
                 // If company id was not already set, search for company existence
-                String currentJobCompanyName = currentJob.getCompany().getName();
+                String currentJobCompanyName = currentJobCompany.getName();
                 Company existingCurrentJobCompany = companyRepository.getCompanyByName(currentJobCompanyName);
                 if (existingCurrentJobCompany != null) {
                     currentJobCompany = existingCurrentJobCompany;
                 } else {
                     // If company is not existing in database, save it as new company
-                    currentJobCompany = currentJob.getCompany();
                     currentJobCompany = companyRepository.save(currentJobCompany);
                 }
             }
@@ -139,13 +138,12 @@ public class ProfileService {
                 firstPostCollegeJobCompany = companyRepository.findById(firstPostCollegeJobCompany.getId()).orElse(null);
             } else {
                 // If company id was not already set, search for company existence
-                String firstPostCollegeJobCompanyName = firstPostCollegeJob.getCompany().getName();
+                String firstPostCollegeJobCompanyName = firstPostCollegeJobCompany.getName();
                 Company existingFirstPostCollegeJobCompany = companyRepository.getCompanyByName(firstPostCollegeJobCompanyName);
                 if (existingFirstPostCollegeJobCompany != null) {
                     firstPostCollegeJobCompany = existingFirstPostCollegeJobCompany;
                 } else {
                     // If company is not existing in database, save it as new company
-                    firstPostCollegeJobCompany = firstPostCollegeJob.getCompany();
                     firstPostCollegeJobCompany = companyRepository.save(firstPostCollegeJobCompany);
                 }
             }
@@ -177,13 +175,12 @@ public class ProfileService {
                 dreamJobCompany = companyRepository.findById(dreamJobCompany.getId()).orElse(null);
             } else {
                 // If company id was not already set, search for company existence
-                String dreamJobCompanyName = dreamJob.getCompany().getName();
+                String dreamJobCompanyName = dreamJobCompany.getName();
                 Company existingDreamJobCompany = companyRepository.getCompanyByName(dreamJobCompanyName);
                 if (existingDreamJobCompany != null) {
                     dreamJobCompany = existingDreamJobCompany;
                 } else {
                     // If company is not existing in database, save it as new company
-                    dreamJobCompany = dreamJob.getCompany();
                     dreamJobCompany = companyRepository.save(dreamJobCompany);
                 }
             }
@@ -202,32 +199,86 @@ public class ProfileService {
                 dreamJob.setJobType(JobType.DREAM_JOB);
                 dreamJob.setUser(user);
                 dreamJob.setCompany(dreamJobCompany);
-                jobRepository.save(dreamJob);
             }
+            jobRepository.save(dreamJob);
 
             //--------- Process collegeSchoolUser ---------//
-            //TODO: Create logic to process collegeSchoolUser
-            // school, end date, field of study
             SchoolUser collegeSchoolUser = profileDetails.getCollegeSchoolUser();
+            SchoolUser existingCollegeSchoolUser = null;
             School college = profileDetails.getCollegeSchoolUser().getSchool();
 
             // See if school is existing
             if (college.getId() != null) {
                 college = schoolRepository.findById(college.getId()).orElse(null);
             } else {
-                // If school not already saved,
+                // If school not already set, search for school existence
+                String collegeName = college.getName();
+                School existingSchool = schoolRepository.getSchoolByName(collegeName);
+                if (existingSchool != null) {
+                    college = existingSchool;
+                } else {
+                    // If school is not existing in database, save it as new school
+                    college = schoolRepository.save(college);
+                }
             }
 
 
-            // See if college school user is existing
+            // See if college school already exists
             if (collegeSchoolUser.getId() != null) {
-                collegeSchoolUser = schoolUserRepository.findById(collegeSchoolUser.getId()).orElse(null);
+                // Update existing college school user
+                existingCollegeSchoolUser = schoolUserRepository.findById(collegeSchoolUser.getId()).orElse(null);
+                existingCollegeSchoolUser.setSchool(college);
+                existingCollegeSchoolUser.setUser(user);
+                existingCollegeSchoolUser.setEndDate(collegeSchoolUser.getEndDate());
+                existingCollegeSchoolUser.setFieldOfStudy(collegeSchoolUser.getFieldOfStudy());
+                collegeSchoolUser = existingCollegeSchoolUser;
             } else {
-
+                // Create new school user of correct type
+                collegeSchoolUser.setUser(user);
+                collegeSchoolUser.setSchool(college);
+                collegeSchoolUser.setSchoolUserType(SchoolUserType.COLLEGE);
             }
+            schoolUserRepository.save(collegeSchoolUser);
 
             //--------- Process postGradSchoolUser ---------//
             // school, end date, degree, field of study
+            SchoolUser postGradSchoolUser = profileDetails.getPostGradSchoolUser();
+            SchoolUser existingPostGradSchoolUser = null;
+            School postGradSchool = profileDetails.getPostGradSchoolUser().getSchool();
+
+            // See if school is existing
+            if (postGradSchool.getId() != null) {
+                postGradSchool = schoolRepository.findById(postGradSchool.getId()).orElse(null);
+            } else {
+                // If school not already set, search for school existence
+                String postGradSchoolName = postGradSchool.getName();
+                School existingSchool = schoolRepository.getSchoolByName(postGradSchoolName);
+                if (existingSchool != null) {
+                    postGradSchool = existingSchool;
+                } else {
+                    // If school is not existing in database, save it as new school
+                    postGradSchool = schoolRepository.save(postGradSchool);
+                }
+            }
+
+
+            // See if post grad school already exists
+            if (postGradSchoolUser.getId() != null) {
+                // Update existing post grad school user
+                existingPostGradSchoolUser = schoolUserRepository.findById(postGradSchoolUser.getId()).orElse(null);
+                existingPostGradSchoolUser.setSchool(postGradSchool);
+                existingPostGradSchoolUser.setUser(user);
+                existingPostGradSchoolUser.setEndDate(postGradSchoolUser.getEndDate());
+                existingPostGradSchoolUser.setFieldOfStudy(postGradSchoolUser.getFieldOfStudy());
+                existingPostGradSchoolUser.setDegree(postGradSchoolUser.getDegree());
+                postGradSchoolUser = existingPostGradSchoolUser;
+            } else {
+                // Create new school user of correct type
+                postGradSchoolUser.setUser(user);
+                postGradSchoolUser.setSchool(postGradSchool);
+                postGradSchoolUser.setSchoolUserType(SchoolUserType.POST_GRAD);
+            }
+            schoolUserRepository.save(postGradSchoolUser);
 
             return profileDetails;
         } catch (Exception e) {

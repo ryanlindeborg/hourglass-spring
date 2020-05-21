@@ -9,4 +9,5 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface SchoolRepository extends JpaRepository<School, Long> {
+    public School getSchoolByName(String name);
 }

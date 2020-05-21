@@ -4,6 +4,7 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.*;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -34,6 +35,9 @@ public class HourglassSpringApplication {
 	private SchoolRepository schoolRepository;
 	@Autowired
 	private SchoolUserRepository schoolUserRepository;
+
+	@Value(value = "${vue.client.url}")
+	String clientUrl;
 
 	@Bean
 	// Start-up data for h2 database for development
@@ -91,8 +95,8 @@ public class HourglassSpringApplication {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		//TODO: Update url to be environment-based so can dynamically input url at which should allow origin
-		config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+		// Dynamically set the allowed origins of the application based on environment
+		config.setAllowedOrigins(Collections.singletonList(clientUrl));
 		config.setAllowedMethods(Collections.singletonList("*"));
 		config.setAllowedHeaders(Collections.singletonList("*"));
 		source.registerCorsConfiguration("/**", config);
