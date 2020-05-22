@@ -15,9 +15,14 @@ public class ProfileRestController {
     }
 
     // Returns JSON of complete profile that front-end can parse and render into profile
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/json/{id}")
     public ProfileJson getProfileJsonByUserId(@PathVariable("id") Long userId) {
         return profileService.getProfileJsonByUserId(userId);
+    }
+
+    @GetMapping("/user/{id}")
+    public ProfileDetails getProfileDetailsByUserId(@PathVariable("id") Long userId) {
+        return profileService.getProfileDetailsByUserId(userId);
     }
 
     // Parse profile information from biography form and create objects

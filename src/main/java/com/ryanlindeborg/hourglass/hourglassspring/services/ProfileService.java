@@ -68,6 +68,23 @@ public class ProfileService {
 
     /**
      *
+     * This method generates the components of a user's profile
+     *
+     * @param userId
+     * @return profileDetails tied to user
+     */
+    public ProfileDetails getProfileDetailsByUserId(Long userId) {
+        // TODO: construct object based on linked objects
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new HourglassRestException("Could not find this user",  HourglassRestErrorCode.RESOURCE_NOT_FOUND);
+        }
+
+        // TODO: GENERATE PROFILE DETAILS OBJECT
+    }
+
+    /**
+     *
      * @param profileDetails
      * @return profileDetails that was passed into method back to front end so can edit if hit validation error
      */
