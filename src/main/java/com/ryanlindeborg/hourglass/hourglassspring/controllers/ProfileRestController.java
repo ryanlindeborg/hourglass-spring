@@ -22,6 +22,7 @@ public class ProfileRestController {
 
     // Parse profile information from biography form and create objects
     // TODO: could include 200 (or 204, or 201 - created) - which can include response body
+    // TODO: Instead just return object or exception that has error code baked into it, but have to be able to pass in
     @PostMapping("/user")
     public ProfileDetails saveProfile(@RequestBody ProfileDetails profileDetails) {
         return profileService.saveProfileFromJson(profileDetails);
