@@ -75,12 +75,29 @@ public class ProfileService {
      */
     public ProfileDetails getProfileDetailsByUserId(Long userId) {
         // TODO: construct object based on linked objects
+        ProfileDetails profileDetails = new ProfileDetails();
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new HourglassRestException("Could not find this user",  HourglassRestErrorCode.RESOURCE_NOT_FOUND);
+            throw new HourglassRestException("Unable to find this user",  HourglassRestErrorCode.RESOURCE_NOT_FOUND);
         }
+        profileDetails.setUser(user);
 
-        // TODO: GENERATE PROFILE DETAILS OBJECT
+        Job currentJob = jobRepository.getJobByUserIdAndJobType(user.getId(), JobType.CURRENT_JOB);
+        profileDetails.setCurrentJob(currentJob);
+
+        Job firstPostCollegeJob = jobRepository.getJobByUserIdAndJobType(user.getId(), JobType.FIRST_POST_COLLEGE_JOB);
+        profileDetails.setFirstPostCollegeJob(firstPostCollegeJob);
+
+        Job dreamJob = jobRepository.getJobByUserIdAndJobType(user.getId(), JobType.DREAM_JOB);
+        profileDetails.setDreamJob(dreamJob);
+
+        SchoolUser collegeSchoolUser = schoolUserRepository.getSchoolUserByUserIdAndSchoolUserType(user.getId(), SchoolUserType.COLLEGE);
+        profileDetails.setCollegeSchoolUser(collegeSchoolUser);
+
+        SchoolUser postGradSchoolUser = schoolUserRepository.getSchoolUserByUserIdAndSchoolUserType(user.getId(), SchoolUserType.POST_GRAD);
+        profileDetails.setPostGradSchoolUser(postGradSchoolUser);
+
+        return profileDetails;
     }
 
     /**

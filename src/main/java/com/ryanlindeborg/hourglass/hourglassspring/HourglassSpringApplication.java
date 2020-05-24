@@ -42,7 +42,7 @@ public class HourglassSpringApplication {
 	@Bean
 	// Start-up data for h2 database for development
 	InitializingBean setUpDB() {
-		//TODO: Implement builder pattern for these objects
+		//TODO: Implement builder pattern for these objects maybe
 		// Create user
 		User user = new User();
 		user.setFirstName("Cameron");
@@ -51,12 +51,18 @@ public class HourglassSpringApplication {
 		user.setBirthDate(birthDate.getTime());
 		user.setUserType(UserType.DEFAULT);
 
-		// Create company
+		// Create companies
 		Company company = new Company();
 		company.setName("Mutiny");
 		company.setIndustry(Industry.SOFTWARE_AND_COMPUTERS);
+		Company company2 = new Company();
+		company2.setName("SpaceX");
+		company2.setIndustry(Industry.AEROSPACE);
+		Company company3 = new Company();
+		company3.setName("JP Morgan");
+		company3.setIndustry(Industry.FINANCE);
 
-		// Create job
+		// Create current job
 		Job job = new Job();
 		job.setCompany(company);
 		job.setPosition("Founder");
@@ -65,27 +71,67 @@ public class HourglassSpringApplication {
 		Calendar endDate = new GregorianCalendar(1992, 2, 18);
 		job.setStartDate(startDate.getTime());
 		job.setEndDate(endDate.getTime());
+		job.setJobType(JobType.CURRENT_JOB);
+
+		// Create first post college job
+		Job job2 = new Job();
+		job2.setCompany(company2);
+		job2.setPosition("Flight Engineer");
+		job2.setUser(user);
+		Calendar startDate2 = new GregorianCalendar(1992, 2, 18);
+		Calendar endDate2 = new GregorianCalendar(1997, 7, 15);
+		job2.setStartDate(startDate2.getTime());
+		job2.setEndDate(endDate2.getTime());
+		job2.setJobType(JobType.FIRST_POST_COLLEGE_JOB);
+
+		// Create dream job
+		Job job3 = new Job();
+		job3.setCompany(company3);
+		job3.setPosition("Management Director");
+		job3.setUser(user);
+		job3.setJobType(JobType.DREAM_JOB);
+
 
 		// Create school
 		School school = new School();
 		school.setName("MIT");
+		School school2 = new School();
+		school2.setName("Harvard");
 
-		// Create school user
-		SchoolUser schoolUser = new SchoolUser();
-		schoolUser.setUser(user);
-		schoolUser.setSchool(school);
-		schoolUser.setDegree(Degree.BA);
-		schoolUser.setFieldOfStudy("Computer Science");
+		// Create college school user
+		SchoolUser collegeSchoolUser = new SchoolUser();
+		collegeSchoolUser.setUser(user);
+		collegeSchoolUser.setSchool(school);
+		collegeSchoolUser.setDegree(Degree.BA);
+		collegeSchoolUser.setFieldOfStudy("Computer Science");
 		Calendar endDateSchool = new GregorianCalendar(1986, 5, 26);
-		schoolUser.setEndDate(endDateSchool.getTime());
-		schoolUser.setIsCompleted(Boolean.TRUE);
+		collegeSchoolUser.setEndDate(endDateSchool.getTime());
+		collegeSchoolUser.setIsCompleted(Boolean.TRUE);
+		collegeSchoolUser.setSchoolUserType(SchoolUserType.COLLEGE);
+
+		// Create post-grad school user
+		SchoolUser postGradSchoolUser = new SchoolUser();
+		postGradSchoolUser.setUser(user);
+		postGradSchoolUser.setSchool(school2);
+		postGradSchoolUser.setDegree(Degree.MBA);
+		postGradSchoolUser.setFieldOfStudy("Entrepreneurship");
+		Calendar endDatePostGradSchool = new GregorianCalendar(1988, 6, 1);
+		postGradSchoolUser.setEndDate(endDatePostGradSchool.getTime());
+		postGradSchoolUser.setIsCompleted(Boolean.TRUE);
+		postGradSchoolUser.setSchoolUserType(SchoolUserType.POST_GRAD);
 
 		return () -> {
 			userRepository.save(user);
 			companyRepository.save(company);
+			companyRepository.save(company2);
+			companyRepository.save(company3);
 			jobRepository.save(job);
+			jobRepository.save(job2);
+			jobRepository.save(job3);
 			schoolRepository.save(school);
-			schoolUserRepository.save(schoolUser);
+			schoolRepository.save(school2);
+			schoolUserRepository.save(collegeSchoolUser);
+			schoolUserRepository.save(postGradSchoolUser);
 		};
 	}
 

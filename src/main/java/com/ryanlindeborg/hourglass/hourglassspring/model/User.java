@@ -23,4 +23,9 @@ public class User {
     private Date birthDate;
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
+
+    //TODO: How would this be accomplished?
+    public Job getCurrentJob() {
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.repositories;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUser;
+import com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,6 @@ import java.util.List;
 @Transactional
 public interface SchoolUserRepository extends JpaRepository<SchoolUser, Long> {
     public List<SchoolUser> getSchoolUsersByUserId(Long userId);
+
+    public SchoolUser getSchoolUserByUserIdAndSchoolUserType(Long userId, SchoolUserType schoolUserType);
 }
