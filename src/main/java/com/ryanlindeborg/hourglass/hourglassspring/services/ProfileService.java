@@ -74,7 +74,6 @@ public class ProfileService {
      * @return profileDetails tied to user
      */
     public ProfileDetails getProfileDetailsByUserId(Long userId) {
-        // TODO: construct object based on linked objects
         ProfileDetails profileDetails = new ProfileDetails();
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {

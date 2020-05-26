@@ -5,6 +5,8 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path="/api/v1/profile", produces="application/json")
 public class ProfileRestController {
@@ -29,7 +31,7 @@ public class ProfileRestController {
     // TODO: could include 200 (or 204, or 201 - created) - which can include response body
     // TODO: Instead just return object or exception that has error code baked into it, but have to be able to pass in
     @PostMapping("/user")
-    public ProfileDetails saveProfile(@RequestBody ProfileDetails profileDetails) {
+    public ProfileDetails saveProfile(@Valid @RequestBody ProfileDetails profileDetails) {
         return profileService.saveProfileFromJson(profileDetails);
     }
 }
