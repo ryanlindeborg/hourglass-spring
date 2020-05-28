@@ -29,6 +29,10 @@ public class User {
     private Date birthDate;
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
+    @Column(name = "image_square_name")
+    private String imageSquareName;
+    @Column(name = "image_rectangle_name")
+    private String imageRectangleName;
 
     //TODO: How would this be accomplished?
     public Job getCurrentJob() {
