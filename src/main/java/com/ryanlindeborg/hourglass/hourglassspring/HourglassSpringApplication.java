@@ -49,7 +49,18 @@ public class HourglassSpringApplication {
 		user.setLastName("Howe");
 		Calendar birthDate = new GregorianCalendar(1965, 3, 2);
 		user.setBirthDate(birthDate.getTime());
+		user.setImageSquareName("elon-musk-square");
+		user.setImageRectangleName("elon-musk-rectangle");
 		user.setUserType(UserType.DEFAULT);
+
+		User user2 = new User();
+		user2.setFirstName("Gordon");
+		user2.setLastName("Clark");
+		Calendar birthDate2 = new GregorianCalendar(1951, 9, 17);
+		user2.setBirthDate(birthDate2.getTime());
+		user2.setImageSquareName("larry-page-square");
+		user2.setImageRectangleName("larry-page-rectangle");
+		user2.setUserType(UserType.DEFAULT);
 
 		// Create companies
 		Company company = new Company();
@@ -68,9 +79,7 @@ public class HourglassSpringApplication {
 		job.setPosition("Founder");
 		job.setUser(user);
 		Calendar startDate = new GregorianCalendar(1990, 6, 12);
-		Calendar endDate = new GregorianCalendar(1992, 2, 18);
 		job.setStartDate(startDate.getTime());
-		job.setEndDate(endDate.getTime());
 		job.setJobType(JobType.CURRENT_JOB);
 
 		// Create first post college job
@@ -83,6 +92,14 @@ public class HourglassSpringApplication {
 		job2.setStartDate(startDate2.getTime());
 		job2.setEndDate(endDate2.getTime());
 		job2.setJobType(JobType.FIRST_POST_COLLEGE_JOB);
+
+		Job job4 = new Job();
+		job4.setCompany(company2);
+		job4.setPosition("Senior Rocket Engineer");
+		job4.setUser(user2);
+		Calendar startDate4 = new GregorianCalendar(1987, 4, 22);
+		job4.setStartDate(startDate4.getTime());
+		job4.setJobType(JobType.CURRENT_JOB);
 
 		// Create dream job
 		Job job3 = new Job();
@@ -122,12 +139,14 @@ public class HourglassSpringApplication {
 
 		return () -> {
 			userRepository.save(user);
+			userRepository.save(user2);
 			companyRepository.save(company);
 			companyRepository.save(company2);
 			companyRepository.save(company3);
 			jobRepository.save(job);
 			jobRepository.save(job2);
 			jobRepository.save(job3);
+			jobRepository.save(job4);
 			schoolRepository.save(school);
 			schoolRepository.save(school2);
 			schoolUserRepository.save(collegeSchoolUser);

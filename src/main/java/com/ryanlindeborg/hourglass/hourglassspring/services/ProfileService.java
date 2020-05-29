@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.*;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.SimilarUser;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.*;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,26 @@ public class ProfileService {
 
     public ProfileService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public List<ProfilePreview> getProfilePreviews() {
+        //TODO: Update this to take a range maybe for pagination
+        List<User> users = userRepository.findAll();
+        List<ProfilePreview> profilePreviews = new ArrayList<>();
+
+        for (User user : users) {
+            ProfilePreview profilePreview = new ProfilePreview();
+            profilePreview.setUser(user);
+
+            Job currentJob = jobRepository.getJobByUserIdAndJobType(user.getId(), JobType.CURRENT_JOB);
+            if (currentJob != null) {
+                profilePreview.setCurrentJob(currentJob);
+            }
+
+            profilePreviews.add(profilePreview);
+        }
+
+        return profilePreviews;
     }
 
     public User getUserById(Long userId) {

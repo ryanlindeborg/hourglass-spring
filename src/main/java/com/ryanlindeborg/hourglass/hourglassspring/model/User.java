@@ -29,8 +29,10 @@ public class User {
     private Date birthDate;
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
+    // Aspect ratio 1x1 wxh
     @Column(name = "image_square_name")
     private String imageSquareName;
+    // Aspect ratio 3x4 wxh
     @Column(name = "image_rectangle_name")
     private String imageRectangleName;
 

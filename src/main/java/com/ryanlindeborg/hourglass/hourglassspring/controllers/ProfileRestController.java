@@ -2,10 +2,12 @@ package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfilePreview;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/v1/profile", produces="application/json")
@@ -14,6 +16,13 @@ public class ProfileRestController {
 
     public ProfileRestController(ProfileService profileService) {
         this.profileService = profileService;
+    }
+
+    // Returns JSON of profile preview for all users
+    // TODO: Figure out best way to paginate this
+    @GetMapping("/previews")
+    public List<ProfilePreview> getProfilePreviews() {
+        return profileService.getProfilePreviews();
     }
 
     // Returns JSON of complete profile that front-end can parse and render into profile
