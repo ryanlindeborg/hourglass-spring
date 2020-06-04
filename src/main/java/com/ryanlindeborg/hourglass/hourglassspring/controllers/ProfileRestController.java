@@ -41,6 +41,10 @@ public class ProfileRestController {
     // TODO: Instead just return object or exception that has error code baked into it, but have to be able to pass in
     @PostMapping("/user")
     public ProfileDetails saveProfile(@Valid @RequestBody ProfileDetails profileDetails) {
+        //TODO: Do more complex validation logic on object before call profileService method - can throw exceptions on it
+        // Concatenate list of errors and errors can be displayed
+        // If hit validation error, don't send initial data back, send list of errors
+
         return profileService.saveProfileFromJson(profileDetails);
     }
 }

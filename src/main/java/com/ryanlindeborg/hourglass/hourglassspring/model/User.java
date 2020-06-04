@@ -35,9 +35,4 @@ public class User {
     // Aspect ratio 3x4 wxh
     @Column(name = "image_rectangle_name")
     private String imageRectangleName;
-
-    //TODO: How would this be accomplished?
-    public Job getCurrentJob() {
-        return null;
-    }
 }

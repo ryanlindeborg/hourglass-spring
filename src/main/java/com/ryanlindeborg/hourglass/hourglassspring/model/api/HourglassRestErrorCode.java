@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum HourglassRestErrorCode {
+    //TODO: These error codes should not be the same as error codes - should be specific to application and help developer who is connecting
     RESOURCE_NOT_FOUND(404),
     UNPROCESSABLE_ENTITY(422),
     INTERNAL_SERVER_ERROR(500);

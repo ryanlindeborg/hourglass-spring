@@ -1,11 +1,13 @@
 package com.ryanlindeborg.hourglass.hourglassspring.exception;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 public class HourglassRestException extends RuntimeException {
     private HourglassRestErrorCode errorCode;
+    private HttpStatus httpStatus;
     private String message;
     private List<String> errors;
 
