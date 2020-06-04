@@ -17,6 +17,10 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     public Job getJobByUserIdAndJobType(Long userId, JobType jobType);
 
+    public List<Job> getJobsByUserDisplayName(String displayName);
+
+    public Job getJobByUserDisplayNameAndJobType(String displayNae, JobType jobType);
+
     //TODO: Refactor - Find by username or email - do by username and autogenerate username for industry leaders
     // TODO: Can also try to replace query with string; see if problem is with enum type
     @Query("SELECT j FROM Job j WHERE j.user.id = :userId and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.CURRENT_JOB")

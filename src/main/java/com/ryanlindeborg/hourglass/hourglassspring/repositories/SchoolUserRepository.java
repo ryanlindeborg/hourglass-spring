@@ -14,4 +14,8 @@ public interface SchoolUserRepository extends JpaRepository<SchoolUser, Long> {
     public List<SchoolUser> getSchoolUsersByUserId(Long userId);
 
     public SchoolUser getSchoolUserByUserIdAndSchoolUserType(Long userId, SchoolUserType schoolUserType);
+
+    public List<SchoolUser> getSchoolUsersByUserDisplayName(String displayName);
+
+    public SchoolUser getSchoolUserByUserDisplayNameAndSchoolUserType(String displayName, SchoolUserType schoolUserType);
 }

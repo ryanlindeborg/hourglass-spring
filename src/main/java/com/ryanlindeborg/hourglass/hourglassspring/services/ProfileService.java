@@ -83,6 +83,29 @@ public class ProfileService {
         return profileJson;
     }
 
+    public ProfileJson getProfileJsonByUserDisplayName(String displayName) {
+        ProfileJson profileJson = new ProfileJson();
+
+        // Grab user
+        User user = userRepository.getUserByDisplayName(displayName);
+        if (user == null) {
+            throw new HourglassRestException("User profile does not exist", HourglassRestErrorCode.RESOURCE_NOT_FOUND);
+        }
+        profileJson.setUser(user);
+
+        // Grab list of jobs associated with user
+        List<Job> jobs = jobRepository.getJobsByUserDisplayName(displayName);
+        profileJson.setJobs(jobs);
+
+        // Grab list of school-user records associated with that user
+        List<SchoolUser> schoolUsers = schoolUserRepository.getSchoolUsersByUserDisplayName(displayName);
+        profileJson.setSchoolUsers(schoolUsers);
+
+        return profileJson;
+    }
+
+
+
     /**
      *
      * This method generates the components of a user's profile
@@ -111,6 +134,39 @@ public class ProfileService {
         profileDetails.setCollegeSchoolUser(collegeSchoolUser);
 
         SchoolUser postGradSchoolUser = schoolUserRepository.getSchoolUserByUserIdAndSchoolUserType(user.getId(), SchoolUserType.POST_GRAD);
+        profileDetails.setPostGradSchoolUser(postGradSchoolUser);
+
+        return profileDetails;
+    }
+
+    /**
+     *
+     * This method generates the components of a user's profile
+     *
+     * @param displayName
+     * @return profileDetails tied to user
+     */
+    public ProfileDetails getProfileDetailsByUserDisplayName(String displayName) {
+        ProfileDetails profileDetails = new ProfileDetails();
+        User user = userRepository.getUserByDisplayName(displayName);
+        if (user == null) {
+            throw new HourglassRestException("Unable to find this user",  HourglassRestErrorCode.RESOURCE_NOT_FOUND);
+        }
+        profileDetails.setUser(user);
+
+        Job currentJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.CURRENT_JOB);
+        profileDetails.setCurrentJob(currentJob);
+
+        Job firstPostCollegeJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.FIRST_POST_COLLEGE_JOB);
+        profileDetails.setFirstPostCollegeJob(firstPostCollegeJob);
+
+        Job dreamJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.DREAM_JOB);
+        profileDetails.setDreamJob(dreamJob);
+
+        SchoolUser collegeSchoolUser = schoolUserRepository.getSchoolUserByUserDisplayNameAndSchoolUserType(user.getDisplayName(), SchoolUserType.COLLEGE);
+        profileDetails.setCollegeSchoolUser(collegeSchoolUser);
+
+        SchoolUser postGradSchoolUser = schoolUserRepository.getSchoolUserByUserDisplayNameAndSchoolUserType(user.getDisplayName(), SchoolUserType.POST_GRAD);
         profileDetails.setPostGradSchoolUser(postGradSchoolUser);
 
         return profileDetails;

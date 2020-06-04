@@ -29,6 +29,14 @@ public class User {
     private Date birthDate;
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
+    // Must be unique across users
+    @Column(name = "username")
+    @NotBlank(message="Username is required")
+    private String username;
+    // Must be unique across users
+    @Column(name = "displayName")
+    @NotBlank(message="Profile display name is required")
+    private String displayName;
     // Aspect ratio 1x1 wxh
     @Column(name = "image_square_name")
     private String imageSquareName;
