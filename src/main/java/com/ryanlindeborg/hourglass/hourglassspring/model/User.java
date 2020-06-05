@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.UserJson;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,4 +44,21 @@ public class User {
     // Aspect ratio 3x4 wxh
     @Column(name = "image_rectangle_name")
     private String imageRectangleName;
+
+    public UserJson createUserJson() {
+        UserJson userJson = UserJson.builder()
+                .id(id)
+                .firstName(firstName)
+                .middleName(middleName)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .userType(userType)
+                .username(username)
+                .displayName(displayName)
+                .imageSquareName(imageSquareName)
+                .imageRectangleName(imageRectangleName)
+                .build();
+
+        return userJson;
+    }
 }

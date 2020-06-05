@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.JobJson;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,20 @@ public class Job {
     private Date endDate;
     @Enumerated(value = EnumType.STRING)
     private JobType jobType;
+
+    public JobJson createJobJson() {
+        JobJson jobJson = JobJson.builder()
+                .id(id)
+                .userJson(user.createUserJson())
+                .position(position)
+                //TODO: 6/4/2020: Add companyJson so can create from company
+                .companyJson(null)
+                .industry(industry)
+                .startDate(startDate)
+                .endDate(endDate)
+                .jobType(jobType)
+                .build();
+
+        return jobJson;
+    }
 }

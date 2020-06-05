@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.*;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.*;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.JobJson;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.UserJson;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -148,15 +150,21 @@ public class ProfileService {
      */
     public ProfileDetails getProfileDetailsByUserDisplayName(String displayName) {
         ProfileDetails profileDetails = new ProfileDetails();
+
         User user = userRepository.getUserByDisplayName(displayName);
         if (user == null) {
             throw new HourglassRestException("Unable to find this user",  HourglassRestErrorCode.RESOURCE_NOT_FOUND);
         }
-        profileDetails.setUser(user);
+        UserJson userJson = user.createUserJson();
+        profileDetails.setUserJson(userJson);
 
         Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(displayName);
-        profileDetails.setCurrentJob(currentJob);
+        if (currentJob != null) {
+            JobJson currentJobJson = currentJob.createJobJson();
+            profileDetails.setCurrentJobJson(currentJobJson);
+        }
 
+        //TODO: 6/4/20: Create json objects and set to profileDetails
         Job firstPostCollegeJob = jobRepository.getFirstPostCollegeJobForUserByDisplayName(displayName);
         profileDetails.setFirstPostCollegeJob(firstPostCollegeJob);
 
