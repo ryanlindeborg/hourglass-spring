@@ -46,7 +46,7 @@ public class ProfileService {
             ProfilePreview profilePreview = new ProfilePreview();
             profilePreview.setUser(user);
 
-            Job currentJob = jobRepository.getJobByUserIdAndJobType(user.getId(), JobType.CURRENT_JOB);
+            Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(user.getDisplayName());
             if (currentJob != null) {
                 profilePreview.setCurrentJob(currentJob);
             }
@@ -154,19 +154,19 @@ public class ProfileService {
         }
         profileDetails.setUser(user);
 
-        Job currentJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.CURRENT_JOB);
+        Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(displayName);
         profileDetails.setCurrentJob(currentJob);
 
-        Job firstPostCollegeJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.FIRST_POST_COLLEGE_JOB);
+        Job firstPostCollegeJob = jobRepository.getFirstPostCollegeJobForUserByDisplayName(displayName);
         profileDetails.setFirstPostCollegeJob(firstPostCollegeJob);
 
-        Job dreamJob = jobRepository.getJobByUserDisplayNameAndJobType(user.getDisplayName(), JobType.DREAM_JOB);
+        Job dreamJob = jobRepository.getDreamJobForUserByDisplayName(displayName);
         profileDetails.setDreamJob(dreamJob);
 
-        SchoolUser collegeSchoolUser = schoolUserRepository.getSchoolUserByUserDisplayNameAndSchoolUserType(user.getDisplayName(), SchoolUserType.COLLEGE);
+        SchoolUser collegeSchoolUser = schoolUserRepository.getCollegeSchoolUserByUserDisplayName(displayName);
         profileDetails.setCollegeSchoolUser(collegeSchoolUser);
 
-        SchoolUser postGradSchoolUser = schoolUserRepository.getSchoolUserByUserDisplayNameAndSchoolUserType(user.getDisplayName(), SchoolUserType.POST_GRAD);
+        SchoolUser postGradSchoolUser = schoolUserRepository.getPostGradSchoolUserByUserDisplayName(displayName);
         profileDetails.setPostGradSchoolUser(postGradSchoolUser);
 
         return profileDetails;
