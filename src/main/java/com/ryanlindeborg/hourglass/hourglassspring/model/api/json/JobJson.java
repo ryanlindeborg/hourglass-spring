@@ -2,6 +2,7 @@ package com.ryanlindeborg.hourglass.hourglassspring.model.api.json;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.Industry;
 import com.ryanlindeborg.hourglass.hourglassspring.model.JobType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class JobJson {
     private Long id;

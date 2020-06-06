@@ -36,8 +36,7 @@ public class Job {
                 .id(id)
                 .userJson(user.createUserJson())
                 .position(position)
-                //TODO: 6/4/2020: Add companyJson so can create from company
-                .companyJson(null)
+                .companyJson(company.createCompanyJson())
                 .industry(industry)
                 .startDate(startDate)
                 .endDate(endDate)

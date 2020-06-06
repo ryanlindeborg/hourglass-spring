@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.SchoolUserJson;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,4 +32,20 @@ public class SchoolUser {
     private Boolean isCompleted;
     @Enumerated(value = EnumType.STRING)
     private SchoolUserType schoolUserType;
+
+    public SchoolUserJson createSchoolUserJson() {
+        SchoolUserJson schoolUserJson = SchoolUserJson.builder()
+                .id(id)
+                .userJson(user.createUserJson())
+                .schoolJson(school.createSchoolJson())
+                .startDate(startDate)
+                .endDate(endDate)
+                .degree(degree)
+                .fieldOfStudy(fieldOfStudy)
+                .isCompleted(isCompleted)
+                .schoolUserType(schoolUserType)
+                .build();
+
+        return schoolUserJson;
+    }
 }
