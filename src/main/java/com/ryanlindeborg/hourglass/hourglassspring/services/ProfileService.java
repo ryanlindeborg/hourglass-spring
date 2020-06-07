@@ -195,7 +195,6 @@ public class ProfileService {
      * @param profileDetails
      * @return profileDetails that was passed into method back to front end so can edit if hit validation error
      */
-    //TODO: 6/5/2020: Edit objects from json objects
     @Transactional
     public ProfileDetails saveProfileFromJson(ProfileDetails profileDetails) {
         try {
