@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model.api.json;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.Company;
 import com.ryanlindeborg.hourglass.hourglassspring.model.Industry;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +17,16 @@ import javax.persistence.Enumerated;
 @Builder
 public class CompanyJson {
     private Long id;
-    @Column(name = "name")
     private String name;
-    @Enumerated(value = EnumType.STRING)
     private Industry industry;
+
+    public Company createCompany() {
+        Company company = Company.builder()
+                .id(id)
+                .name(name)
+                .industry(industry)
+                .build();
+
+        return company;
+    }
 }

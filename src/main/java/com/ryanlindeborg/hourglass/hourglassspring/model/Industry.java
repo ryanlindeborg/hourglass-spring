@@ -1,5 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Industry {
 
     AEROSPACE("Aerospace"),
@@ -28,6 +30,7 @@ public enum Industry {
         this.industryName = industryName;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return industryName;

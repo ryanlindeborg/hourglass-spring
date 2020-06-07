@@ -1,5 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Degree {
 
     MD("MD"),
@@ -23,6 +25,7 @@ public enum Degree {
         this.degreeName = degreeName;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return degreeName;
