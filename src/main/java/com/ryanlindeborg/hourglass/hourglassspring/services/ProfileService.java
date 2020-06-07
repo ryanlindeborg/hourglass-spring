@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.*;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.*;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.CompanyJson;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.JobJson;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.SchoolUserJson;
-import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.UserJson;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.*;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -297,13 +294,13 @@ public class ProfileService {
             }
 
             //--------- Process dreamJob ---------//
-            Job dreamJob = profileDetails.getDreamJob();
-            Job existingDreamJob = null;
-            Company dreamJobCompany = profileDetails.getDreamJob().getCompany();
+            JobJson dreamJobJson = profileDetails.getDreamJobJson();
+            CompanyJson dreamJobCompanyJson = profileDetails.getDreamJobJson().getCompanyJson();
+            Company dreamJobCompany = null;
 
             // See if dream job company is existing
-            if (dreamJobCompany.getId() != null) {
-                dreamJobCompany = companyRepository.findById(dreamJobCompany.getId()).orElse(null);
+            if (dreamJobCompanyJson.getId() != null) {
+                dreamJobCompany = companyRepository.findById(dreamJobCompanyJson.getId()).orElse(null);
             } else {
                 // If company id was not already set, search for company existence
                 String dreamJobCompanyName = dreamJobCompany.getName();
@@ -312,104 +309,106 @@ public class ProfileService {
                     dreamJobCompany = existingDreamJobCompany;
                 } else {
                     // If company is not existing in database, save it as new company
-                    dreamJobCompany = companyRepository.save(dreamJobCompany);
+                    dreamJobCompany = companyRepository.save(dreamJobCompanyJson.createCompany());
                 }
             }
 
             // Check if dream job already exists
-            if (dreamJob.getId() != null) {
+            if (dreamJobJson.getId() != null) {
                 // Update existing dream job
-                existingDreamJob = jobRepository.findById(dreamJob.getId()).orElse(null);
-                existingDreamJob.setPosition(dreamJob.getPosition());
-                existingDreamJob.setIndustry(dreamJob.getIndustry());
+                Job existingDreamJob = jobRepository.findById(dreamJobJson.getId()).orElse(null);
+                existingDreamJob.setPosition(dreamJobJson.getPosition());
+                existingDreamJob.setIndustry(dreamJobJson.getIndustry());
                 existingDreamJob.setCompany(dreamJobCompany);
-                dreamJob = existingDreamJob;
+                jobRepository.save(existingDreamJob);
             } else {
                 // Create new job of correct job type
+                Job dreamJob = dreamJobJson.createJob();
                 dreamJob.setCompany(dreamJobCompany);
-                dreamJob.setJobType(JobType.DREAM_JOB);
                 dreamJob.setUser(user);
-                dreamJob.setCompany(dreamJobCompany);
+                dreamJob.setJobType(JobType.DREAM_JOB);
+                jobRepository.save(dreamJob);
             }
-            jobRepository.save(dreamJob);
 
             //--------- Process collegeSchoolUser ---------//
-            SchoolUser collegeSchoolUser = profileDetails.getCollegeSchoolUser();
-            SchoolUser existingCollegeSchoolUser = null;
-            School college = profileDetails.getCollegeSchoolUser().getSchool();
+            SchoolUserJson collegeSchoolUserJson = profileDetails.getCollegeSchoolUserJson();
+            SchoolJson collegeJson = profileDetails.getCollegeSchoolUserJson().getSchoolJson();
+            School college = null;
 
             // See if school is existing
-            if (college.getId() != null) {
-                college = schoolRepository.findById(college.getId()).orElse(null);
+            if (collegeJson.getId() != null) {
+                college = schoolRepository.findById(collegeJson.getId()).orElse(null);
             } else {
                 // If school not already set, search for school existence
-                String collegeName = college.getName();
+                String collegeName = collegeJson.getName();
                 School existingSchool = schoolRepository.getSchoolByName(collegeName);
                 if (existingSchool != null) {
                     college = existingSchool;
                 } else {
                     // If school is not existing in database, save it as new school
-                    college = schoolRepository.save(college);
+                    college = schoolRepository.save(collegeJson.createSchool());
                 }
             }
 
 
-            // See if college school already exists
-            if (collegeSchoolUser.getId() != null) {
+            // See if college school user already exists
+            if (collegeSchoolUserJson.getId() != null) {
                 // Update existing college school user
-                existingCollegeSchoolUser = schoolUserRepository.findById(collegeSchoolUser.getId()).orElse(null);
+                SchoolUser existingCollegeSchoolUser = schoolUserRepository.findById(collegeSchoolUserJson.getId()).orElse(null);
                 existingCollegeSchoolUser.setSchool(college);
                 existingCollegeSchoolUser.setUser(user);
-                existingCollegeSchoolUser.setEndDate(collegeSchoolUser.getEndDate());
-                existingCollegeSchoolUser.setFieldOfStudy(collegeSchoolUser.getFieldOfStudy());
-                collegeSchoolUser = existingCollegeSchoolUser;
+                existingCollegeSchoolUser.setEndDate(collegeSchoolUserJson.getEndDate());
+                existingCollegeSchoolUser.setFieldOfStudy(collegeSchoolUserJson.getFieldOfStudy());
+                schoolUserRepository.save(existingCollegeSchoolUser);
             } else {
                 // Create new school user of correct type
+                SchoolUser collegeSchoolUser = collegeSchoolUserJson.createSchoolUser();
                 collegeSchoolUser.setUser(user);
                 collegeSchoolUser.setSchool(college);
                 collegeSchoolUser.setSchoolUserType(SchoolUserType.COLLEGE);
+                schoolUserRepository.save(collegeSchoolUser);
             }
-            schoolUserRepository.save(collegeSchoolUser);
 
             //--------- Process postGradSchoolUser ---------//
             // school, end date, degree, field of study
-            SchoolUser postGradSchoolUser = profileDetails.getPostGradSchoolUser();
-            SchoolUser existingPostGradSchoolUser = null;
-            School postGradSchool = profileDetails.getPostGradSchoolUser().getSchool();
+            SchoolUserJson postGradSchoolUserJson = profileDetails.getPostGradSchoolUserJson();
+            SchoolJson postGradSchoolJson = profileDetails.getPostGradSchoolUserJson().getSchoolJson();
+            School postGradSchool = null;
 
             // See if school is existing
-            if (postGradSchool.getId() != null) {
-                postGradSchool = schoolRepository.findById(postGradSchool.getId()).orElse(null);
+            if (postGradSchoolJson.getId() != null) {
+                postGradSchool = schoolRepository.findById(postGradSchoolJson.getId()).orElse(null);
             } else {
                 // If school not already set, search for school existence
-                String postGradSchoolName = postGradSchool.getName();
+                String postGradSchoolName = postGradSchoolJson.getName();
                 School existingSchool = schoolRepository.getSchoolByName(postGradSchoolName);
                 if (existingSchool != null) {
                     postGradSchool = existingSchool;
                 } else {
                     // If school is not existing in database, save it as new school
-                    postGradSchool = schoolRepository.save(postGradSchool);
+                    postGradSchool = schoolRepository.save(postGradSchoolJson.createSchool());
                 }
             }
 
 
-            // See if post grad school already exists
-            if (postGradSchoolUser.getId() != null) {
+            // See if post grad school user already exists
+            if (postGradSchoolUserJson.getId() != null) {
                 // Update existing post grad school user
-                existingPostGradSchoolUser = schoolUserRepository.findById(postGradSchoolUser.getId()).orElse(null);
+                SchoolUser existingPostGradSchoolUser = schoolUserRepository.findById(postGradSchoolUserJson.getId()).orElse(null);
                 existingPostGradSchoolUser.setSchool(postGradSchool);
                 existingPostGradSchoolUser.setUser(user);
-                existingPostGradSchoolUser.setEndDate(postGradSchoolUser.getEndDate());
-                existingPostGradSchoolUser.setFieldOfStudy(postGradSchoolUser.getFieldOfStudy());
-                existingPostGradSchoolUser.setDegree(postGradSchoolUser.getDegree());
-                postGradSchoolUser = existingPostGradSchoolUser;
+                existingPostGradSchoolUser.setEndDate(postGradSchoolUserJson.getEndDate());
+                existingPostGradSchoolUser.setFieldOfStudy(postGradSchoolUserJson.getFieldOfStudy());
+                existingPostGradSchoolUser.setDegree(postGradSchoolUserJson.getDegree());
+                schoolUserRepository.save(existingPostGradSchoolUser);
             } else {
                 // Create new school user of correct type
+                SchoolUser postGradSchoolUser = postGradSchoolUserJson.createSchoolUser();
                 postGradSchoolUser.setUser(user);
                 postGradSchoolUser.setSchool(postGradSchool);
                 postGradSchoolUser.setSchoolUserType(SchoolUserType.POST_GRAD);
+                schoolUserRepository.save(postGradSchoolUser);
             }
-            schoolUserRepository.save(postGradSchoolUser);
 
             return profileDetails;
         } catch (Exception e) {
