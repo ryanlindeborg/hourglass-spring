@@ -1,7 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model.api;
 
-import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
-import com.ryanlindeborg.hourglass.hourglassspring.model.User;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.JobJson;
+import com.ryanlindeborg.hourglass.hourglassspring.model.api.json.UserJson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProfilePreview {
-    private User user;
-    private Job currentJob;
+    private UserJson userJson;
+    private JobJson currentJobJson;
 }

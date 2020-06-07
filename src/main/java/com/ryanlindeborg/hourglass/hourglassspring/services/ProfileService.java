@@ -45,11 +45,11 @@ public class ProfileService {
 
         for (User user : users) {
             ProfilePreview profilePreview = new ProfilePreview();
-            profilePreview.setUser(user);
+            profilePreview.setUserJson(user.createUserJson());
 
             Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(user.getDisplayName());
             if (currentJob != null) {
-                profilePreview.setCurrentJob(currentJob);
+                profilePreview.setCurrentJobJson(currentJob.createJobJson());
             }
 
             profilePreviews.add(profilePreview);
