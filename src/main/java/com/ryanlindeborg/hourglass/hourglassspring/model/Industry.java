@@ -21,8 +21,9 @@ public enum Industry {
     MEDIA("Media"),
     TELECOMMUNICATIONS("Telecommunications"),
     FOOD_AND_BEVERAGE("Food and Beverage"),
-    TRANSPORATION("Transportation"),
+    TRANSPORTATION("Transportation"),
     FINANCE("Finance");
+//    NONE_SELECTED("");
 
     private String industryName;
 
