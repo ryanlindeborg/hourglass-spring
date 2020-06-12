@@ -47,7 +47,7 @@ public class ProfileService {
             ProfilePreview profilePreview = new ProfilePreview();
             profilePreview.setUserJson(user.createUserJson());
 
-            Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(user.getDisplayName());
+            Job currentJob = jobRepository.getCurrentJobForUserByUserId(user.getId());
             if (currentJob != null) {
                 profilePreview.setCurrentJobJson(currentJob.createJobJson());
             }
@@ -95,11 +95,11 @@ public class ProfileService {
         profileJson.setUser(user);
 
         // Grab list of jobs associated with user
-        List<Job> jobs = jobRepository.getJobsByUserDisplayName(displayName);
+        List<Job> jobs = jobRepository.getJobsByUserId(user.getId());
         profileJson.setJobs(jobs);
 
         // Grab list of school-user records associated with that user
-        List<SchoolUser> schoolUsers = schoolUserRepository.getSchoolUsersByUserDisplayName(displayName);
+        List<SchoolUser> schoolUsers = schoolUserRepository.getSchoolUsersByUserId(user.getId());
         profileJson.setSchoolUsers(schoolUsers);
 
         return profileJson;
@@ -157,31 +157,31 @@ public class ProfileService {
         UserJson userJson = user.createUserJson();
         profileDetails.setUserJson(userJson);
 
-        Job currentJob = jobRepository.getCurrentJobForUserByDisplayName(displayName);
+        Job currentJob = jobRepository.getCurrentJobForUserByUserId(user.getId());
         if (currentJob != null) {
             JobJson currentJobJson = currentJob.createJobJson();
             profileDetails.setCurrentJobJson(currentJobJson);
         }
 
-        Job firstPostCollegeJob = jobRepository.getFirstPostCollegeJobForUserByDisplayName(displayName);
+        Job firstPostCollegeJob = jobRepository.getFirstPostCollegeJobForUserByUserId(user.getId());
         if (firstPostCollegeJob != null) {
             JobJson firstPostCollegeJobJson = firstPostCollegeJob.createJobJson();
             profileDetails.setFirstPostCollegeJobJson(firstPostCollegeJobJson);
         }
 
-        Job dreamJob = jobRepository.getDreamJobForUserByDisplayName(displayName);
+        Job dreamJob = jobRepository.getDreamJobForUserByUserId(user.getId());
         if (dreamJob != null) {
             JobJson dreamJobJson = dreamJob.createJobJson();
             profileDetails.setDreamJobJson(dreamJobJson);
         }
 
-        SchoolUser collegeSchoolUser = schoolUserRepository.getCollegeSchoolUserByUserDisplayName(displayName);
+        SchoolUser collegeSchoolUser = schoolUserRepository.getCollegeSchoolUserByUserId(user.getId());
         if (collegeSchoolUser != null) {
             SchoolUserJson collegeSchoolUserJson = collegeSchoolUser.createSchoolUserJson();
             profileDetails.setCollegeSchoolUserJson(collegeSchoolUserJson);
         }
 
-        SchoolUser postGradSchoolUser = schoolUserRepository.getPostGradSchoolUserByUserDisplayName(displayName);
+        SchoolUser postGradSchoolUser = schoolUserRepository.getPostGradSchoolUserByUserId(user.getId());
         if (postGradSchoolUser != null) {
             SchoolUserJson postGradSchoolUserJson = postGradSchoolUser.createSchoolUserJson();
             profileDetails.setPostGradSchoolUserJson(postGradSchoolUserJson);

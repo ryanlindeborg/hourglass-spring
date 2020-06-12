@@ -15,18 +15,12 @@ import java.util.List;
 public interface JobRepository extends JpaRepository<Job, Long> {
     public List<Job> getJobsByUserId(Long userId);
 
-    public Job getJobByUserIdAndJobType(Long userId, JobType jobType);
+    @Query("SELECT j FROM Job j WHERE j.user.id = :userId and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.CURRENT_JOB")
+    public Job getCurrentJobForUserByUserId(@Param("userId") Long userId);
 
-    public List<Job> getJobsByUserDisplayName(String displayName);
+    @Query("SELECT j FROM Job j WHERE j.user.id = :userId and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.FIRST_POST_COLLEGE_JOB")
+    public Job getFirstPostCollegeJobForUserByUserId(@Param("userId") Long userId);
 
-    public Job getJobByUserDisplayNameAndJobType(String displayNae, JobType jobType);
-
-    @Query("SELECT j FROM Job j WHERE j.user.displayName = :displayName and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.CURRENT_JOB")
-    public Job getCurrentJobForUserByDisplayName(@Param("displayName") String displayName);
-
-    @Query("SELECT j FROM Job j WHERE j.user.displayName = :displayName and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.FIRST_POST_COLLEGE_JOB")
-    public Job getFirstPostCollegeJobForUserByDisplayName(@Param("displayName") String displayName);
-
-    @Query("SELECT j FROM Job j WHERE j.user.displayName = :displayName and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.DREAM_JOB")
-    public Job getDreamJobForUserByDisplayName(@Param("displayName") String displayName);
+    @Query("SELECT j FROM Job j WHERE j.user.id = :userId and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.DREAM_JOB")
+    public Job getDreamJobForUserByUserId(@Param("userId") Long userId);
 }

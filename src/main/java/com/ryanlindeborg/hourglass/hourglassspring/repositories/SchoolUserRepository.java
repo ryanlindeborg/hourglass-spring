@@ -15,15 +15,9 @@ import java.util.List;
 public interface SchoolUserRepository extends JpaRepository<SchoolUser, Long> {
     public List<SchoolUser> getSchoolUsersByUserId(Long userId);
 
-    public SchoolUser getSchoolUserByUserIdAndSchoolUserType(Long userId, SchoolUserType schoolUserType);
+    @Query("SELECT su FROM SchoolUser su WHERE su.user.id = :userId and su.schoolUserType = com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType.COLLEGE")
+    public SchoolUser getCollegeSchoolUserByUserId(@Param("userId") Long userId);
 
-    public List<SchoolUser> getSchoolUsersByUserDisplayName(String displayName);
-
-    public SchoolUser getSchoolUserByUserDisplayNameAndSchoolUserType(String displayName, SchoolUserType schoolUserType);
-
-    @Query("SELECT su FROM SchoolUser su WHERE su.user.displayName = :displayName and su.schoolUserType = com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType.COLLEGE")
-    public SchoolUser getCollegeSchoolUserByUserDisplayName(@Param("displayName") String displayName);
-
-    @Query("SELECT su FROM SchoolUser su WHERE su.user.displayName = :displayName and su.schoolUserType = com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType.POST_GRAD")
-    public SchoolUser getPostGradSchoolUserByUserDisplayName(@Param("displayName") String displayName);
+    @Query("SELECT su FROM SchoolUser su WHERE su.user.id = :userId and su.schoolUserType = com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType.POST_GRAD")
+    public SchoolUser getPostGradSchoolUserByUserId(@Param("userId") Long userId);
 }

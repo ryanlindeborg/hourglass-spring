@@ -101,6 +101,7 @@ public class ProfileServiceTest {
     @Test
     public void testGetProfileJsonForNullUser() {
 //        when(profileService.getUserById(Mockito.anyLong())).thenReturn(null);
+//        when(profileService.getUserById(Mockito.anyLong())).thenReturn(Optional.empty());
         // TODO: What would be best way to pass back null user from profileService mock?
         when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
 
