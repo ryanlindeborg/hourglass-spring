@@ -37,7 +37,7 @@ public class User {
     @NotBlank(message="Username is required")
     private String username;
     // Must be unique across users
-    @Column(name = "displayName")
+    @Column(name = "display_name")
     @NotBlank(message="Profile display name is required")
     private String displayName;
     // Aspect ratio 1x1 wxh
@@ -46,6 +46,8 @@ public class User {
     // Aspect ratio 3x4 wxh
     @Column(name = "image_rectangle_name")
     private String imageRectangleName;
+    @Column(name = "password_hash")
+    private String passwordHash;
 
     public UserJson createUserJson() {
         UserJson userJson = UserJson.builder()

@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -42,6 +43,7 @@ public class HourglassSpringApplication {
 	@Bean
 	// Start-up data for h2 database for development
 	InitializingBean setUpDB() {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		//TODO: Implement builder pattern for these objects maybe
 		// Create user
 		User user = new User();
@@ -53,6 +55,7 @@ public class HourglassSpringApplication {
 		user.setDisplayName("cameron_howe");
 		user.setImageSquareName("elon-musk-square");
 		user.setImageRectangleName("elon-musk-rectangle");
+		user.setPasswordHash(passwordEncoder.encode("helloworld123"));
 		user.setUserType(UserType.DEFAULT);
 
 		User user2 = new User();
@@ -64,6 +67,7 @@ public class HourglassSpringApplication {
 		user2.setDisplayName("gordon_clark");
 		user2.setImageSquareName("larry-page-square");
 		user2.setImageRectangleName("larry-page-rectangle");
+		user2.setPasswordHash(passwordEncoder.encode("helloworld456"));
 		user2.setUserType(UserType.DEFAULT);
 
 		// Create companies
