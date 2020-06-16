@@ -30,6 +30,9 @@ public class User {
     @Column(name = "birth_date")
     @NotNull(message="Birth date is required")
     private Date birthDate;
+    @Column(name="email")
+    @NotBlank(message="Email is required")
+    private String email;
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
     // Must be unique across users
