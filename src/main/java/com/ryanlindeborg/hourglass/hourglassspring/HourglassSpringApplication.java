@@ -51,6 +51,7 @@ public class HourglassSpringApplication {
 		user.setLastName("Howe");
 		Calendar birthDate = new GregorianCalendar(1965, 3, 2);
 		user.setBirthDate(birthDate.getTime());
+		user.setEmail("chowe@mailinator.com");
 		user.setUsername("cameronh");
 		user.setDisplayName("cameron_howe");
 		user.setImageSquareName("elon-musk-square");
@@ -63,6 +64,7 @@ public class HourglassSpringApplication {
 		user2.setLastName("Clark");
 		Calendar birthDate2 = new GregorianCalendar(1951, 9, 17);
 		user2.setBirthDate(birthDate2.getTime());
+		user2.setEmail("gclark@mailinator.com");
 		user2.setUsername("gordonc");
 		user2.setDisplayName("gordon_clark");
 		user2.setImageSquareName("larry-page-square");
