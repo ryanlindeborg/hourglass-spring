@@ -15,16 +15,23 @@ public class HourglassUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.getUserByDisplayName(s);
+    // This method is defined in Spring security interface UserDetailsService
+    public UserDetails loadUserByUsername(String displayName) throws UsernameNotFoundException {
+        // Security implementation stores display name in JWT token, so going to load details by display name
+        return loadHourglassUserByDisplayName(displayName);
+    }
+
+    public HourglassUser loadHourglassUserByDisplayName(String displayName) throws UsernameNotFoundException {
+        User user = userRepository.getUserByDisplayName(displayName);
         if(user == null) {
             throw new AccessDeniedException("Incorrect credentials.");
         }
 
-        return org.springframework.security.core.userdetails.User.builder()
+        return HourglassUser.hourglassUserBuilder()
                 .username(user.getDisplayName())
                 .password("HIDDEN")
                 .authorities("USER")
+                .minJwtIssuedTimestamp(user.getMinJwtIssuedTimestamp())
                 .build();
     }
 }

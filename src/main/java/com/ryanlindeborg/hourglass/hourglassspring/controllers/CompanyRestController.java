@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: Update api/v1 to be api url property so don't have to update this when update api version
 @RestController
 @RequestMapping(path="/api/v1/company", produces="application/json")
 public class CompanyRestController {
