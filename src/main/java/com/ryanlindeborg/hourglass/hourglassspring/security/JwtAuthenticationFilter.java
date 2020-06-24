@@ -1,5 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.security;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.security.RevokedToken;
+import com.ryanlindeborg.hourglass.hourglassspring.repositories.security.RevokedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
@@ -27,10 +29,13 @@ public class JwtAuthenticationFilter implements Filter {
     @Autowired
     private JwtService jwtService;
 
-    private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-
     @Autowired
     private HourglassUserDetailsService userDetailsService;
+
+    @Autowired
+    private RevokedTokenRepository revokedTokenRepository;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -40,7 +45,7 @@ public class JwtAuthenticationFilter implements Filter {
         if (token != null && !token.trim().isEmpty()) {
             try {
                 this.authenticate(token);
-                logger.warn("JWT authentication passed");
+                LOGGER.warn("JWT authentication passed");
             }
             catch (Throwable e){
                 throw new AccessDeniedException("Access Denied.", e);
@@ -66,7 +71,15 @@ public class JwtAuthenticationFilter implements Filter {
 
         // This UserDetailsService implementation requires displayName, not username
         HourglassUser hourglassUser = userDetailsService.loadHourglassUserByDisplayName(displayName);
+
+        // Check if token was issued before a revocation action (i.e., it should no longer be valid)
         if (hourglassUser.getMinJwtIssuedTimestamp() != null && hourglassUser.getMinJwtIssuedTimestamp() > claims.getIssuedAt().getTime()) {
+            throw new AccessDeniedException("Token has been revoked");
+        }
+
+        // Check if token is a revoked token (via Revoked Token database entity)
+        RevokedToken revokedToken = revokedTokenRepository.getRevokedTokenByToken(token);
+        if (revokedToken != null) {
             throw new AccessDeniedException("Token has been revoked");
         }
 

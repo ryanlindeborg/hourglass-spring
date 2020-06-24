@@ -113,6 +113,12 @@
 			<version>1.3.8.RELEASE</version>
 		</dependency>
 
+		<!-- Batch Jobs -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>

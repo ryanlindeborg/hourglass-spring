@@ -60,6 +60,7 @@ public class UserRestController {
     // TODO: could also have getUsersBy[Object] - getUsersByIndustry
 
     @PostMapping("/session")
+    // TODO: Refactor out to UserService method
     public ResponseEntity<AuthenticationToken> login(@RequestBody LoginDetails credentials) {
         User user = null;
 
@@ -98,5 +99,10 @@ public class UserRestController {
     @PostMapping("/registration")
     public User register(@RequestBody RegistrationDetails registrationDetails) {
         return userService.registerUser(registrationDetails);
+    }
+
+    @PostMapping("/token-revocation")
+    public void logout(String displayName) {
+        userService.logoutUser(displayName);
     }
 }

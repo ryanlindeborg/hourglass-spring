@@ -1,4 +1,4 @@
-package com.ryanlindeborg.hourglass.hourglassspring;
+package com.ryanlindeborg.hourglass.hourglassspring.security;
 
 import com.ryanlindeborg.hourglass.hourglassspring.security.JwtService;
 

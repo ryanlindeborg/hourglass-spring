@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserService {
     @Autowired
@@ -26,5 +28,13 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    public void logoutUser(String displayName) {
+        User user = userRepository.getUserByDisplayName(displayName);
+        Long currentTimestamp = new Date().getTime();
+        // This will set all tokens issued before this timestamp as invalid
+        user.setMinJwtIssuedTimestamp(currentTimestamp);
+        userRepository.save(user);
     }
 }
