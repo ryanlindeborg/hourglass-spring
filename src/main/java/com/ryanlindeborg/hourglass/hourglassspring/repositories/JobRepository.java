@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Repository
+// Note: Have to rename this jobRepository because it conflicts with Spring Batch jobRepository
+@Repository("hourglassJobRepository")
 @Transactional
 public interface JobRepository extends JpaRepository<Job, Long> {
     public List<Job> getJobsByUserId(Long userId);
