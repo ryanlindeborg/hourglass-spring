@@ -46,11 +46,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public RevokedTokenProcessor processor() {
-        return new RevokedTokenProcessor();
-    }
-
-    @Bean
     public org.springframework.batch.core.Job importRevokedTokenJob() {
         return jobBuilderFactory.get("importRevokedTokenJob")
                 .incrementer(new RunIdIncrementer())
@@ -62,9 +57,9 @@ public class BatchConfiguration {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<RevokedToken, RevokedToken> chunk(20)
+                .<RevokedToken, RevokedToken> chunk(100)
                 .reader(revokedTokenItemReader())
-                .processor(processor())
+                .processor(new RevokedTokenProcessor())
                 .writer((item) -> { logger.info("Skip writing for revoked tokens"); })
                 .build();
     }
