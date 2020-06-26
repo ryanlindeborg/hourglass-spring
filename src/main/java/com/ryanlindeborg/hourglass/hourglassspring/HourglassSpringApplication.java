@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -26,6 +27,8 @@ public class HourglassSpringApplication {
 		SpringApplication.run(HourglassSpringApplication.class, args);
 	}
 
+	@Autowired
+	private RoleRepository roleRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -47,6 +50,7 @@ public class HourglassSpringApplication {
 		//TODO: Implement builder pattern for these objects maybe
 		// Create user
 		User user = new User();
+		user.setRoles(Arrays.asList(new Role("USER")));
 		user.setFirstName("Cameron");
 		user.setLastName("Howe");
 		Calendar birthDate = new GregorianCalendar(1965, 3, 2);
@@ -60,6 +64,7 @@ public class HourglassSpringApplication {
 		user.setUserType(UserType.DEFAULT);
 
 		User user2 = new User();
+		user2.setRoles(Arrays.asList(new Role("ADMIN")));
 		user2.setFirstName("Gordon");
 		user2.setLastName("Clark");
 		Calendar birthDate2 = new GregorianCalendar(1951, 9, 17);
@@ -147,7 +152,16 @@ public class HourglassSpringApplication {
 		postGradSchoolUser.setIsCompleted(Boolean.TRUE);
 		postGradSchoolUser.setSchoolUserType(SchoolUserType.POST_GRAD);
 
+		Role userRole = new Role();
+		userRole.setName("USER");
+
+		Role adminRole = new Role();
+		adminRole.setName("ADMIN");
+
+
 		return () -> {
+			roleRepository.save(adminRole);
+			roleRepository.save(userRole);
 			userRepository.save(user);
 			userRepository.save(user2);
 			companyRepository.save(company);

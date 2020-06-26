@@ -85,7 +85,7 @@ public class JwtAuthenticationFilter implements Filter {
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(hourglassUser,
-                        "HIDDEN", Collections.singleton(new SimpleGrantedAuthority("USER"))));
+                        "HIDDEN", hourglassUser.getAuthorities()));
 
 
     }
