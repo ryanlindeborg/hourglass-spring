@@ -19,4 +19,16 @@ public class SecurityUtils {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     *
+     * This method takes the role strings defined, and prepends ROLE_ to it
+     * to generate the string needed to construct the authority
+     *
+     * @param role
+     * @return authority string needed for creating authority list
+     */
+    public static String generateAuthorityStringFromRoleString(String role) {
+        return "ROLE_" + role;
+    }
 }
