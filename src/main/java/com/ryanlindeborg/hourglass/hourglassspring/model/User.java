@@ -30,7 +30,6 @@ public class User {
     @NotBlank(message="Last name is required")
     private String lastName;
     @Column(name = "birth_date")
-    @NotNull(message="Birth date is required")
     private Date birthDate;
     @Column(name="email")
     @NotBlank(message="Email is required")
