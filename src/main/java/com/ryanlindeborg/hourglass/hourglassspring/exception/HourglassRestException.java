@@ -1,10 +1,18 @@
 package com.ryanlindeborg.hourglass.hourglassspring.exception;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.HourglassRestErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class HourglassRestException extends RuntimeException {
     private HourglassRestErrorCode errorCode;
     private HttpStatus httpStatus;
@@ -20,11 +28,5 @@ public class HourglassRestException extends RuntimeException {
         super(cause);
         this.errorCode = errorCode;
         this.message = message;
-    }
-
-    public HourglassRestException(String message, HourglassRestErrorCode errorCode, List<String> errors){
-        this.errorCode = errorCode;
-        this.message = message;
-        this.errors = errors;
     }
 }

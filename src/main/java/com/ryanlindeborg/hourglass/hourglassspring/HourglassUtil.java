@@ -2,6 +2,8 @@ package com.ryanlindeborg.hourglass.hourglassspring;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.util.List;
+
 public class HourglassUtil {
     /**
      *
@@ -10,5 +12,9 @@ public class HourglassUtil {
      */
     public static Boolean isValidEmail(String entry) {
         return EmailValidator.getInstance().isValid(entry);
+    }
+
+    public static Boolean isEmptyOrNull(List list) {
+        return (list == null || list.isEmpty());
     }
 }

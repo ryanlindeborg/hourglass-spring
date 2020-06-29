@@ -1,6 +1,7 @@
 package com.ryanlindeborg.hourglass.hourglassspring.services;
 
 import com.ryanlindeborg.hourglass.hourglassspring.HourglassUtil;
+import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.LoginDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.RegistrationDetails;
@@ -16,7 +17,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -29,12 +32,32 @@ public class UserService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(registrationDetails.getPassword());
 
+        String userName = registrationDetails.getUsername();
+        String displayName = registrationDetails.getDisplayName();
+
+        // Validate that username ad displayName are not already taken
+        List<String> errors = new ArrayList<>();
+        if (userRepository.getUserByUsername(userName) != null) {
+            errors.add("That username is not available. Please select a different one.");
+        }
+        if (userRepository.getUserByDisplayName(displayName) != null) {
+            errors.add("That profile handle is not available. Please select a different one.");
+        }
+
+        if (!HourglassUtil.isEmptyOrNull(errors)) {
+            throw new HourglassRestException()
+                    .builder()
+                    .message("User registration failed")
+                    .errors(errors)
+                    .build();
+        }
+
         User user = User.builder()
                 .firstName(registrationDetails.getFirstName())
                 .lastName(registrationDetails.getLastName())
                 .email(registrationDetails.getEmail())
-                .username(registrationDetails.getUsername())
-                .displayName(registrationDetails.getDisplayName())
+                .username(userName)
+                .displayName(displayName)
                 .passwordHash(hashedPassword)
                 .build();
 
