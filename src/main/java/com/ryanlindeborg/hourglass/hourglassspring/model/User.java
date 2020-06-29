@@ -52,7 +52,7 @@ public class User {
     private String imageRectangleName;
     @Column(name = "password_hash")
     private String passwordHash;
-    @Column(name = "min_jwt_iat", columnDefinition = "int default 0")
+    @Column(name = "min_jwt_iat", columnDefinition = "long default 0")
     private Long minJwtIssuedTimestamp;
 
     public UserJson createUserJson() {

@@ -62,7 +62,7 @@ public class UserRestController {
     }
 
     @PostMapping("/token-revocation")
-    public ResponseEntity logout(String displayName) {
+    public ResponseEntity logout(@RequestBody String displayName) {
         return userService.logoutUser(displayName);
     }
 }
