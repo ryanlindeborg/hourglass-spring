@@ -217,8 +217,6 @@ public class ProfileService {
                         .build();
             }
 
-            // TODO: Have to not save to repository if fields are empty string or null - otherwise
-            //  will not be able to edit fields
             //--------- Process currentJob ---------//
             CompanyJson currentJobCompanyJson = profileDetails.getCurrentJobJson().getCompanyJson();
             Company currentJobCompany = getCompanyFromCompanyJson(currentJobCompanyJson);
@@ -265,38 +263,15 @@ public class ProfileService {
         }
     }
 
-    private User saveUserFromUserJson(UserJson userJson) {
-        // Check if user already exists
-        if (userJson.getId() != null) {
-            // Update existing user
-            User existingUser = userRepository.findById(userJson.getId()).orElse(null);
-            existingUser.setFirstName(userJson.getFirstName());
-            existingUser.setLastName(userJson.getLastName());
-            existingUser.setBirthDate(userJson.getBirthDate());
-            return userRepository.save(existingUser);
-        } else {
-            User user = userJson.createUser();
-            // Save user as default user
-            user.setUserType(UserType.DEFAULT);
-
-            return userRepository.save(user);
-        }
-    }
-
     private Company getCompanyFromCompanyJson(CompanyJson companyJson) {
-        // See if current job company is existing
-        if (companyJson.getId() != null) {
-            return companyRepository.findById(companyJson.getId()).orElse(null);
+        // If company id was not already set, search for company existence
+        String companyName = companyJson.getName();
+        Company existingCompany = companyRepository.getCompanyByName(companyName);
+        if (existingCompany != null) {
+            return existingCompany;
         } else {
-            // If company id was not already set, search for company existence
-            String companyName = companyJson.getName();
-            Company existingCompany = companyRepository.getCompanyByName(companyName);
-            if (existingCompany != null) {
-                return existingCompany;
-            } else {
-                // If company is not existing in database, save it as new company
-                return companyRepository.save(companyJson.createCompany());
-            }
+            // If company is not existing in database, save it as new company
+            return companyRepository.save(companyJson.createCompany());
         }
     }
 
@@ -319,19 +294,13 @@ public class ProfileService {
     }
 
     private School getSchoolFromSchoolJson(SchoolJson schoolJson) {
-        // See if school is existing
-        if (schoolJson.getId() != null) {
-            return schoolRepository.findById(schoolJson.getId()).orElse(null);
+        String schoolName = schoolJson.getName();
+        School existingSchool = schoolRepository.getSchoolByName(schoolName);
+        if (existingSchool != null) {
+            return existingSchool;
         } else {
-            // If school not already set, search for school existence
-            String schoolName = schoolJson.getName();
-            School existingSchool = schoolRepository.getSchoolByName(schoolName);
-            if (existingSchool != null) {
-                return existingSchool;
-            } else {
-                // If school is not existing in database, save it as new school
-                return schoolRepository.save(schoolJson.createSchool());
-            }
+            // If school is not existing in database, save it as new school
+            return schoolRepository.save(schoolJson.createSchool());
         }
     }
 
