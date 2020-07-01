@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model.api.json;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.Company;
 import com.ryanlindeborg.hourglass.hourglassspring.model.Industry;
 import com.ryanlindeborg.hourglass.hourglassspring.model.Job;
 import com.ryanlindeborg.hourglass.hourglassspring.model.JobType;
@@ -25,6 +26,14 @@ public class JobJson {
     private JobType jobType;
 
     public Job createJob() {
+        // Set blank json if they are null
+        if (userJson == null) {
+            userJson = UserJson.createEmptyUserJson();
+        }
+        if (companyJson == null) {
+            companyJson = CompanyJson.createEmptyCompanyJson();
+        }
+
         Job job = Job.builder()
                 .id(id)
                 .user(userJson.createUser())
@@ -37,5 +46,12 @@ public class JobJson {
                 .build();
 
         return job;
+    }
+
+    public static JobJson createEmptyJobJson() {
+        return new JobJson().builder()
+                .userJson(UserJson.createEmptyUserJson())
+                .companyJson(CompanyJson.createEmptyCompanyJson())
+                .build();
     }
 }

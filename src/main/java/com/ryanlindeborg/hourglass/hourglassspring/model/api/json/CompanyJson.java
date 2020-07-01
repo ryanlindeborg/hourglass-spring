@@ -29,4 +29,8 @@ public class CompanyJson {
 
         return company;
     }
+
+    public static CompanyJson createEmptyCompanyJson() {
+        return new CompanyJson().builder().build();
+    }
 }

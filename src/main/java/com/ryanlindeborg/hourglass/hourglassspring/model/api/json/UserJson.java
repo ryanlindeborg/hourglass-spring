@@ -41,4 +41,8 @@ public class UserJson {
 
         return user;
     }
+
+    public static UserJson createEmptyUserJson() {
+        return new UserJson().builder().build();
+    }
 }

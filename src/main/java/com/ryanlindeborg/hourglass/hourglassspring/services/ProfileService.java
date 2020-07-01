@@ -161,30 +161,40 @@ public class ProfileService {
         if (currentJob != null) {
             JobJson currentJobJson = currentJob.createJobJson();
             profileDetails.setCurrentJobJson(currentJobJson);
+        } else {
+            profileDetails.setCurrentJobJson(JobJson.createEmptyJobJson());
         }
 
         Job firstPostCollegeJob = jobRepository.getFirstPostCollegeJobForUserByUserId(user.getId());
         if (firstPostCollegeJob != null) {
             JobJson firstPostCollegeJobJson = firstPostCollegeJob.createJobJson();
             profileDetails.setFirstPostCollegeJobJson(firstPostCollegeJobJson);
+        } else {
+            profileDetails.setFirstPostCollegeJobJson(JobJson.createEmptyJobJson());
         }
 
         Job dreamJob = jobRepository.getDreamJobForUserByUserId(user.getId());
         if (dreamJob != null) {
             JobJson dreamJobJson = dreamJob.createJobJson();
             profileDetails.setDreamJobJson(dreamJobJson);
+        } else {
+            profileDetails.setDreamJobJson(JobJson.createEmptyJobJson());
         }
 
         SchoolUser collegeSchoolUser = schoolUserRepository.getCollegeSchoolUserByUserId(user.getId());
         if (collegeSchoolUser != null) {
             SchoolUserJson collegeSchoolUserJson = collegeSchoolUser.createSchoolUserJson();
             profileDetails.setCollegeSchoolUserJson(collegeSchoolUserJson);
+        } else {
+            profileDetails.setCollegeSchoolUserJson(SchoolUserJson.createEmptySchoolUserJson());
         }
 
         SchoolUser postGradSchoolUser = schoolUserRepository.getPostGradSchoolUserByUserId(user.getId());
         if (postGradSchoolUser != null) {
             SchoolUserJson postGradSchoolUserJson = postGradSchoolUser.createSchoolUserJson();
             profileDetails.setPostGradSchoolUserJson(postGradSchoolUserJson);
+        } else {
+            profileDetails.setPostGradSchoolUserJson(SchoolUserJson.createEmptySchoolUserJson());
         }
 
         return profileDetails;
@@ -196,11 +206,19 @@ public class ProfileService {
      * @return profileDetails that was passed into method back to front end so can edit if hit validation error
      */
     @Transactional
-    public ProfileDetails saveProfileFromJson(ProfileDetails profileDetails) {
+    public ProfileDetails saveProfileForUser(ProfileDetails profileDetails, String userDisplayName) {
         try {
             //--------- Process user ---------//
-            User user = saveUserFromUserJson(profileDetails.getUserJson());
+            User user = userRepository.getUserByDisplayName(userDisplayName);
+            if (user == null) {
+                throw new HourglassRestException().builder()
+                        .message("Looks like we can't find your user profile."
+                                + " Please reach out to customer support to fix this.")
+                        .build();
+            }
 
+            // TODO: Have to not save to repository if fields are empty string or null - otherwise
+            //  will not be able to edit fields
             //--------- Process currentJob ---------//
             CompanyJson currentJobCompanyJson = profileDetails.getCurrentJobJson().getCompanyJson();
             Company currentJobCompany = getCompanyFromCompanyJson(currentJobCompanyJson);

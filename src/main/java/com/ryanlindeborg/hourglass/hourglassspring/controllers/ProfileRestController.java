@@ -1,9 +1,12 @@
 package com.ryanlindeborg.hourglass.hourglassspring.controllers;
 
+import com.ryanlindeborg.hourglass.hourglassspring.exception.HourglassRestException;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfilePreview;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,6 +48,8 @@ public class ProfileRestController {
         // Concatenate list of errors and errors can be displayed
         // If hit validation error, don't send initial data back, send list of errors
 
-        return profileService.saveProfileFromJson(profileDetails);
+        // Grab security context authentication object so can extract user display name
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return profileService.saveProfileForUser(profileDetails, authentication.getName());
     }
 }

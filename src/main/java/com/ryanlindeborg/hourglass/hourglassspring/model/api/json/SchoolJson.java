@@ -22,4 +22,8 @@ public class SchoolJson {
 
         return school;
     }
+
+    public static SchoolJson createEmptySchoolJson() {
+        return new SchoolJson().builder().build();
+    }
 }

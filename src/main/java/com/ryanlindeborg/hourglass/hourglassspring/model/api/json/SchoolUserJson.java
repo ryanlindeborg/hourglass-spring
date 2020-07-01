@@ -26,6 +26,14 @@ public class SchoolUserJson {
     private SchoolUserType schoolUserType;
 
     public SchoolUser createSchoolUser() {
+        // Set blank json if they are null
+        if (userJson == null) {
+            userJson = UserJson.createEmptyUserJson();
+        }
+        if (schoolJson == null) {
+            schoolJson = SchoolJson.createEmptySchoolJson();
+        }
+
         SchoolUser schoolUser = SchoolUser.builder()
                 .id(id)
                 .user(userJson.createUser())
@@ -39,5 +47,12 @@ public class SchoolUserJson {
                 .build();
 
         return schoolUser;
+    }
+
+    public static SchoolUserJson createEmptySchoolUserJson() {
+        return new SchoolUserJson().builder()
+                .userJson(UserJson.createEmptyUserJson())
+                .schoolJson(SchoolJson.createEmptySchoolJson())
+                .build();
     }
 }
