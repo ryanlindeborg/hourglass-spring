@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProfileService {
@@ -326,21 +324,45 @@ public class ProfileService {
 
     /**
      *
-     * @param userId
+     * @param userDisplayName
      * @return List of similar users that match user profile on at least one attribute
      *
-     * {
-     * "similarUsers": [
-     *     {}
-     *   ]
-     *
-     * }
+     * [
+     *   {
+     *     similarUser: "",
+     *     [
+     *       {}
+     *     ]
+     *   }
+     * ]
      *
      */
-    public List<SimilarUser> getSimilarUsers(Long userId) {
-        // Should return list of users that match on at least one attribute, and in that list, for each user, have list of attributes that are similar on, and what field in object that they match on
-        // SimilarAttribute object can be name of object and field similar on
-        List<SimilarUser> similarUsers = new ArrayList<>();
+    public List<SimilarUser> getSimilarUsers(String userDisplayName) {
+        ProfileDetails profileDetails = getProfileDetailsByUserDisplayName(userDisplayName);
+        String collegeName = profileDetails.getCollegeSchoolUserJson().getSchoolJson().getName();
+        String postGradSchoolName = profileDetails.getPostGradSchoolUserJson().getSchoolJson().getName();
+        String currentJobPosition = profileDetails.getCurrentJobJson().getCompanyJson().getName();
+        String currentJobCompany = profileDetails.getCurrentJobJson().getPosition();
+        Industry currentJobIndustry = profileDetails.getCurrentJobJson().getIndustry();
+        String firstPostCollegeJobPosition = profileDetails.getFirstPostCollegeJobJson().getPosition();
+        String firstPostCollegeJobCompany = profileDetails.getFirstPostCollegeJobJson().getCompanyJson().getName();
+        Industry firstPostCollegeJobIndustry = profileDetails.getFirstPostCollegeJobJson().getIndustry();
+        String dreamJobPosition = profileDetails.getDreamJobJson().getPosition();
+        String dreamJobCompany = profileDetails.getDreamJobJson().getCompanyJson().getName();
+        Industry dreamJobIndustry = profileDetails.getDreamJobJson().getIndustry();
+
+        HashMap<Long, SimilarUser> similarUserMap = new HashMap<>();
+
+        // Find all schoolUsers with school name matching
+        // For college
+//        List<SchoolUser> schoolUsersMatchingCollege = schoolUserRepository.
+
+        // For post-grad
+
+
+        // Check for similar job
+
+
 
 
         return null;

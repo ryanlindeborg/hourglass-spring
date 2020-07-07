@@ -1,66 +1,58 @@
 package com.ryanlindeborg.hourglass.hourglassspring.model.api;
 
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Class representing json that will be sent to client for similar user profile
+ * Class representing json that will be sent to client for similar user profiles
  */
-// TODO: getSimilarUsers implies comparing against one user so don't have to specify a sourceUser
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SimilarUser {
-    // User who you would like to find similar profiles for
-    private User sourceUser;
-    // User that has similar profile attribute to main user
-    private User similarUser;
-    private List<SimilarAttribute> similarAttributes;
+    // By including the entire user, you can grab the profile image url, etc.
+    private User user;
+//    private String fullName;
+//    private List<SimilarAttribute> similarAttributes;
+    // string key is description of path to field - for presentation only
+    private Map<String, SimilarAttributeValue> similarAttrs;
 
-    // TODO: This could instead be a list of enum values - attributes
-    // Maintain list of attributes
-    private class SimilarAttribute {
-        // Object on which there is profile match
-        private String similarObject;
-        // Object fields on which there is profile match
-        private List<String> similarFields;
+    // Could start with taking out recursive similarAttributeValue then add later- just start with value and metadata
 
-        public String getSimilarObject() {
-            return similarObject;
-        }
-
-        public void setSimilarObject(String similarObject) {
-            this.similarObject = similarObject;
-        }
-
-        public List<String> getSimilarFields() {
-            return similarFields;
-        }
-
-        public void setSimilarFields(List<String> similarFields) {
-            this.similarFields = similarFields;
-        }
+    @Data
+    // T here can be any object or just string - serializable
+    private static class SimilarAttributeValue<T> {
+        // With this recursion, can pass down entire objects - and let front end explore tree however deep they want to
+        // Note: This T value will be n^2 b/c including all objects at entire level
+        // To solve complexity, could just have entire structure at root node and T at other level is null
+        // Could decorate job T object and hang confidencScores on each node
+        // To decorate in Java, could subclass and add analytical but could get messy
+        // This is more possible in JS
+        private T value;
+        // Note: Could add this map later - don't have to recurse down for first version of the solution
+        private Map<String, SimilarAttributeValue> similarAttrs;
+        /* metadta : e.g. match confidence, etc */
+        // Note: Could add other metadata here!!
+        float confidenceScore;
     }
 
-    public User getSourceUser() {
-        return sourceUser;
-    }
-
-    public void setSourceUser(User sourceUser) {
-        this.sourceUser = sourceUser;
-    }
-
-    public User getSimilarUser() {
-        return similarUser;
-    }
-
-    public void setSimilarUser(User similarUser) {
-        this.similarUser = similarUser;
-    }
-
-    public List<SimilarAttribute> getSimilarAttributes() {
-        return similarAttributes;
-    }
-
-    public void setSimilarAttributes(List<SimilarAttribute> similarAttributes) {
-        this.similarAttributes = similarAttributes;
-    }
+//    @Data
+    // May want to have fuzzy matching based on AI (how similar - confidence score: diff opacity based on how confident similarity is)
+    // Look into generics
+//    private static class SimilarAttribute<T> {
+//        // Object on which there is profile match - this is hierarchy of depth 1 - so don't need similarFields map
+////        private T similarObject;
+//        private String similarKey;
+//        private T similarValue;
+//
+//        // Could also build hierarchy object - similarFields - some filled in, and some not - front end has to parse
+//        // Map of similar field name with field value
+////        private Map<String, String> similarFields;
+//    }
 }

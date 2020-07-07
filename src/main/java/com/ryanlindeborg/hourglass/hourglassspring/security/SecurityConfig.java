@@ -26,10 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Disabling CSRF for now
-        //TODO: Change these urls to reference app property for api version so don't have to update that all over when change api version
         http.csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST,"/api/v1/user/session").anonymous().and()
-                .authorizeRequests().antMatchers(HttpMethod.POST,"/api/v1/user/registration").anonymous().and()
                 .authorizeRequests().anyRequest().authenticated().and()
                 .addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class)
                 .exceptionHandling()

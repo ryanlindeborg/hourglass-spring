@@ -24,4 +24,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("SELECT j FROM Job j WHERE j.user.id = :userId and j.jobType = com.ryanlindeborg.hourglass.hourglassspring.model.JobType.DREAM_JOB")
     public Job getDreamJobForUserByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT j FROM Job j WHERE j.company.name = :companyName")
+    public List<Job> getJobsByCompanyName(@Param("companyName") String companyName);
 }

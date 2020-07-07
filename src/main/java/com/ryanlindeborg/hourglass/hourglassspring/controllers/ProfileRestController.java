@@ -5,6 +5,7 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfileJson;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.ProfilePreview;
 import com.ryanlindeborg.hourglass.hourglassspring.services.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path="/api/v1/profile", produces="application/json")
 public class ProfileRestController {
+    @Autowired
     private ProfileService profileService;
-
-    public ProfileRestController(ProfileService profileService) {
-        this.profileService = profileService;
-    }
 
     // Returns JSON of profile preview for all users
     // TODO: Figure out best way to paginate this
@@ -35,7 +33,7 @@ public class ProfileRestController {
     }
 
     @GetMapping("/user/{displayName}")
-    public ProfileDetails getProfileDetailsByUserId(@PathVariable("displayName") String displayName) {
+    public ProfileDetails getProfileDetailsByUserDisplayName(@PathVariable("displayName") String displayName) {
         return profileService.getProfileDetailsByUserDisplayName(displayName);
     }
 

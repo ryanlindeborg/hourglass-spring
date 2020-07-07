@@ -20,4 +20,7 @@ public interface SchoolUserRepository extends JpaRepository<SchoolUser, Long> {
 
     @Query("SELECT su FROM SchoolUser su WHERE su.user.id = :userId and su.schoolUserType = com.ryanlindeborg.hourglass.hourglassspring.model.SchoolUserType.POST_GRAD")
     public SchoolUser getPostGradSchoolUserByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT su FROM SchoolUser su WHERE su.school.name = :schoolName")
+    public List<SchoolUser> getSchoolUsersBySchoolName(@Param("schoolName") String schoolName);
 }
