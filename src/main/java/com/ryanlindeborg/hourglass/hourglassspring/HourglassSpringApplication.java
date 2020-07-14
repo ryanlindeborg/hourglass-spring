@@ -71,6 +71,8 @@ public class HourglassSpringApplication {
 		user2.setBirthDate(birthDate2.getTime());
 		user2.setEmail("gclark@mailinator.com");
 		user2.setUsername("gordonc");
+		user2.setOauthProviderType(OAuthProviderType.GITHUB);
+		user2.setOauthUserId("22038855");
 		user2.setDisplayName("gordon_clark");
 		user2.setImageSquareName("larry-page-square");
 		user2.setImageRectangleName("larry-page-rectangle");

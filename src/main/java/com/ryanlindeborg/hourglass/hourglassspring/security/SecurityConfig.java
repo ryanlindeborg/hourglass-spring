@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 @EnableWebSecurity
@@ -27,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // Disabling CSRF for now
         http.csrf().disable()
+                .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .authorizeRequests().antMatchers("/end_oauth.html").anonymous().and()
                 .authorizeRequests().anyRequest().authenticated().and()
                 .addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class)
                 .exceptionHandling()

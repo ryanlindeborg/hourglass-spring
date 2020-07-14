@@ -10,21 +10,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 
 @Component
 public class JwtAuthenticationFilter implements Filter {
     // My custom header name for auth
     public final static String JWT_HEADER_NAME = "X-Auth-Token";
+    public static final String JWT_COOKIE = "hourglass_token";
 
     @Autowired
     private JwtService jwtService;
@@ -40,12 +42,28 @@ public class JwtAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+        // If user logged in already (e.g., OAuth2AuthenticationToken), no need to authenticate again
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String token = httpRequest.getHeader(JWT_HEADER_NAME);
 
+        // Authenticate token from HTTP-Only cookies
+        if ((token == null || token.trim().isEmpty()) && httpRequest.getCookies() != null) {
+            token = Arrays.stream(httpRequest.getCookies())
+                    .filter(c -> c.getName().equals(JWT_COOKIE))
+                    .map(c->c.getValue()).findFirst().orElse(null);
+        }
+
+        // Authenticate JWT from request header
         if (token != null && !token.trim().isEmpty()) {
             try {
                 this.authenticate(token);
-                LOGGER.warn("JWT authentication passed");
+                LOGGER.info("JWT authentication passed");
             }
             catch (Throwable e){
                 throw new AccessDeniedException("Access Denied.", e);

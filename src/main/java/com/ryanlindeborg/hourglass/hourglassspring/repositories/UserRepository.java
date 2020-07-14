@@ -1,5 +1,6 @@
 package com.ryanlindeborg.hourglass.hourglassspring.repositories;
 
+import com.ryanlindeborg.hourglass.hourglassspring.model.OAuthProviderType;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public User getUserByEmail(String email);
 
     public User getUserByUsername(String username);
+
+    public User getUserByOauthProviderTypeAndOauthUserId(OAuthProviderType providerType, String oauthUserId);
 }

@@ -7,19 +7,21 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.api.LoginDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.RegistrationDetails;
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.security.AuthenticationToken;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.UserRepository;
+import com.ryanlindeborg.hourglass.hourglassspring.security.JwtAuthenticationFilter;
 import com.ryanlindeborg.hourglass.hourglassspring.security.JwtService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -85,17 +87,25 @@ public class UserService {
         }
 
 
-        Date currentDate = new Date();
-        String jwt = Jwts.builder()
-                .setSubject(user.getDisplayName())
-                .setIssuedAt(currentDate)
-                // Set expiration date for 2 hours
-                // TODO: Make util class for time functions - getDateHoursAgo, getCurrentDate
-                .setExpiration(new Date(currentDate.getTime() + 2 * 60 * 60 * 1000L))
-                .signWith(Keys.hmacShaKeyFor(jwtService.getJWTSecret()))
-                .compact();
+        @NotBlank(message = "Profile display name is required") String displayName = user.getDisplayName();
+        return issueAndRespondWithJWT(displayName);
+    }
+
+    public ResponseEntity<AuthenticationToken> issueAndRespondWithJWT(@NotBlank(message = "Profile display name is required") String displayName) {
+        String jwt = issueJWT(displayName);
 
         return new ResponseEntity<>(new AuthenticationToken(jwt), HttpStatus.CREATED);
+    }
+
+    public String issueJWT(@NotBlank(message = "Profile display name is required") String displayName) {
+        Date currentDate = new Date();
+        return Jwts.builder()
+                .setSubject(displayName)
+                .setIssuedAt(currentDate)
+                // Set expiration date for 2 hours
+                .setExpiration(HourglassUtil.getDateHoursAgo(currentDate, -2))
+                .signWith(Keys.hmacShaKeyFor(jwtService.getJWTSecret()))
+                .compact();
     }
 
     public ResponseEntity logoutUser(String displayName) {
@@ -104,6 +114,11 @@ public class UserService {
         // This will set all tokens issued before this timestamp as invalid
         user.setMinJwtIssuedTimestamp(currentTimestamp);
         userRepository.save(user);
-        return new ResponseEntity(HttpStatus.OK);
+        // Remove JWT from the cookies by setting it to blank and expired
+        Map<String, List<String>> headers = Collections.singletonMap(HttpHeaders.SET_COOKIE,
+                Collections.singletonList(
+                        String.format("%s=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; HttpOnly",
+                                JwtAuthenticationFilter.JWT_COOKIE)));
+        return new ResponseEntity(CollectionUtils.toMultiValueMap(headers),HttpStatus.OK);
     }
 }

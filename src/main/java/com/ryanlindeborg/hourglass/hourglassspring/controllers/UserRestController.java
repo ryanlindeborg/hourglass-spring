@@ -5,6 +5,7 @@ import com.ryanlindeborg.hourglass.hourglassspring.model.api.RegistrationDetails
 import com.ryanlindeborg.hourglass.hourglassspring.model.api.security.AuthenticationToken;
 import com.ryanlindeborg.hourglass.hourglassspring.model.User;
 import com.ryanlindeborg.hourglass.hourglassspring.repositories.UserRepository;
+import com.ryanlindeborg.hourglass.hourglassspring.security.HourglassUser;
 import com.ryanlindeborg.hourglass.hourglassspring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -62,7 +64,9 @@ public class UserRestController {
     }
 
     @PostMapping("/token-revocation")
-    public ResponseEntity logout(@RequestBody String displayName) {
+    public ResponseEntity logout(Authentication authentication) {
+        // The user's display name (handle) is what is saved into the HourglassUser username field
+        String displayName = ((HourglassUser) authentication.getPrincipal()).getUsername();
         return userService.logoutUser(displayName);
     }
 }

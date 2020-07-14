@@ -55,6 +55,14 @@ public class User {
     @Column(name = "min_jwt_iat", columnDefinition = "long default 0")
     private Long minJwtIssuedTimestamp;
 
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "oauth_provider_type")
+    private OAuthProviderType oauthProviderType;
+
+    @Column(name = "oauth_user_id")
+    private String oauthUserId;
+
     public UserJson createUserJson() {
         UserJson userJson = UserJson.builder()
                 .id(id)
